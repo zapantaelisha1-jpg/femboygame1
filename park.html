@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cherry Blossom Park</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #ffe6f2, #f5f0ff);
+            color: #c71585;
+            font-family: 'Comic Sans MS', cursive;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 250, 250, 0.95);
+            padding: 30px;
+            border-radius: 25px;
+            border: 4px solid #ffb6c1;
+            box-shadow: 0 0 25px #dda0dd;
+        }
+        
+        .location-title {
+            font-size: 48px;
+            color: #db7093;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .scene {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #fff0f5;
+            border-radius: 15px;
+            border: 2px solid #ffb6c1;
+        }
+        
+        .choices {
+            background: linear-gradient(to right, #fff0f5, #f5f0ff);
+            padding: 25px;
+            border-radius: 20px;
+            border: 3px solid #db7093;
+        }
+        
+        .choice {
+            font-size: 20px;
+            color: #ba55d3;
+            text-decoration: none;
+            display: block;
+            background: linear-gradient(to right, #ffc0cb, #d8bfd8);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 15px;
+            border: 2px solid #ba55d3;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .choice:hover {
+            background: linear-gradient(to right, #ffb6c1, #e6e6fa);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #db7093;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background: linear-gradient(to right, #db7093, #ffb6c1);
+            color: white;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 16px;
+            border: 2px solid #ba55d3;
+        }
+        
+        .park-icons {
+            font-size: 40px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        /* INSERT IMAGE AREA */
+        .image-placeholder {
+            width: 250px;
+            height: 180px;
+            background: #faf0e6;
+            border: 3px dashed #ffb6c1;
+            border-radius: 12px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #db7093;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="location-title">🌸 Cherry Blossom Park 🌸</h1>
+        
+        <div class="park-icons">🌸 🎀 🍃 💖</div>
+        
+        <!-- INSERT YOUR PARK IMAGE HERE -->
+        <div class="image-placeholder">
+            <!-- Replace with: <img src="PARK_IMAGE_URL" style="width:100%;height:100%;border-radius:10px;"> -->
+            <p>🌸 Insert park image here!</p>
+        </div>
+        
+        <div class="scene">
+            Pink petals float through the air in this beautiful cherry blossom park. 
+            Soft music plays from someone's speaker, and people are having picnics. 
+            The atmosphere is peaceful and lovely. What will you do?
+        </div>
+        
+        <div class="choices">
+            <a href="picnic.html" class="choice">🧺 Join a cute picnic group</a>
+            <a href="music.html" class="choice">🎵 Dance to the soft music</a>
+            <a href="nap.html" class="choice">😴 Take a nap under the blossoms</a>
+        </div>
+        
+        <div style="text-align: center;">
+            <a href="index.html" class="back-button">🏠 Back to Main Menu</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Picnic Time!</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #fff0f7, #fff8e1);
+            color: #e91e63;
+            font-family: 'Comic Sans MS', cursive;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 25px;
+            border: 4px solid #ff80ab;
+            box-shadow: 0 0 25px #f8bbd9;
+        }
+        
+        .location-title {
+            font-size: 48px;
+            color: #e91e63;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .scene {
+            font-size: 20px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #fff9c4;
+            border-radius: 15px;
+            border: 2px solid #ffd54f;
+        }
+        
+        .choices {
+            background: linear-gradient(to right, #fff9c4, #fce4ec);
+            padding: 25px;
+            border-radius: 20px;
+            border: 3px solid #e91e63;
+        }
+        
+        .choice {
+            font-size: 20px;
+            color: #d81b60;
+            text-decoration: none;
+            display: block;
+            background: linear-gradient(to right, #ffcdd2, #ffecb3);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 15px;
+            border: 2px solid #ff80ab;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .choice:hover {
+            background: linear-gradient(to right, #f8bbd9, #fff9c4);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #e91e63;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background: linear-gradient(to right, #e91e63, #ff80ab);
+            color: white;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 16px;
+            border: 2px solid #d81b60;
+        }
+        
+        .picnic-icons {
+            font-size: 40px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .image-placeholder {
+            width: 250px;
+            height: 180px;
+            background: #f5f5f5;
+            border: 3px dashed #ff80ab;
+            border-radius: 12px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e91e63;
+        }
+        
+        .winning-message {
+            font-size: 24px;
+            color: #4caf50;
+            text-align: center;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 15px;
+            border: 2px solid #4caf50;
+            margin: 20px 0;
+        }
+        
+        .friend-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background: #fce4ec;
+            border-radius: 15px;
+            border: 2px solid #ff80ab;
+        }
+        
+        .stat-box {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #e91e63;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #d81b60;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="location-title">🧺 Picnic Time! 🧺</h1>
+        
+        <div class="picnic-icons">🍓 🍰 🧺 🎀</div>
+        
+        <!-- INSERT PICNIC IMAGE HERE -->
+        <div class="image-placeholder">
+            <!-- Replace with: <img src="PICNIC_IMAGE_URL" style="width:100%;height:100%;border-radius:10px;object-fit:cover;"> -->
+            <p>🧺 Insert picnic image here!</p>
+        </div>
+        
+        <div class="scene">
+            Welcome to the cute picnic! 🎀 Everyone is wearing pastel outfits and flower crowns. 
+            There's strawberry cake, sandwiches, and pink lemonade. 
+            Choose a fun activity to make new friends and level up! ✨
+        </div>
+        
+        <div class="friend-stats">
+            <div class="stat-box">
+                <div class="stat-value">🌟 1</div>
+                <div class="stat-label">Friendship Level</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">💖 0</div>
+                <div class="stat-label">Hearts Collected</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">🎮 0/3</div>
+                <div class="stat-label">Games Completed</div>
+            </div>
+        </div>
+        
+        <div class="choices">
+            <div class="menu-title">🌸 Choose Your Picnic Activity 🌸</div>
+            
+            <a href="picnic-chat.html" class="choice">💬 Chat with Cute Friends</a>
+            <a href="picnic-phone.html" class="choice">📱 Play on Your Cute Phone</a>
+            <a href="picnic-food.html" class="choice">🍰 Share Food & Level Up</a>
+            <a href="picnic-dance.html" class="choice">💃 Dance Mini-Game</a>
+            <a href="picnic-selfie.html" class="choice">📸 Take Group Selfies</a>
+        </div>
+        
+        <div class="choices" style="margin-top: 20px;">
+            <div class="menu-title">✨ Quick Actions ✨</div>
+            
+            <a href="index.html" class="choice">🏠 Return to Main Menu</a>
+            <a href="park.html" class="choice">🌸 Back to Park</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Femboy Cafe</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #fff0f5, #faf0e6);
+            color: #d87093;
+            font-family: 'Comic Sans MS', cursive;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 250, 250, 0.95);
+            padding: 30px;
+            border-radius: 25px;
+            border: 4px dotted #ff69b4;
+            box-shadow: 0 0 25px #ffb6c1;
+        }
+        
+        .location-title {
+            font-size: 48px;
+            color: #ff69b4;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .scene {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #fffaf0;
+            border-radius: 15px;
+            border: 2px solid #dda0dd;
+        }
+        
+        .choices {
+            background: linear-gradient(to right, #ffe4e1, #fff0f5);
+            padding: 25px;
+            border-radius: 20px;
+            border: 3px solid #ff69b4;
+        }
+        
+        .choice {
+            font-size: 20px;
+            color: #9370db;
+            text-decoration: none;
+            display: block;
+            background: linear-gradient(to right, #ffc0cb, #d8bfd8);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 15px;
+            border: 2px solid #9370db;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .choice:hover {
+            background: linear-gradient(to right, #ffb6c1, #e6e6fa);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ff69b4;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background: linear-gradient(to right, #9370db, #dda0dd);
+            color: white;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 16px;
+            border: 2px solid #ff69b4;
+        }
+        
+        .cafe-icons {
+            font-size: 40px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        /* INSERT IMAGE AREA */
+        .image-placeholder {
+            width: 250px;
+            height: 180px;
+            background: #f5f5f5;
+            border: 3px dashed #dda0dd;
+            border-radius: 12px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9370db;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="location-title">☕ Femboy Cafe ☕</h1>
+        
+        <div class="cafe-icons">🎀 🍰 ☕ 🌸</div>
+        
+        <!-- INSERT YOUR CAFE IMAGE HERE -->
+        <div class="image-placeholder">
+            <img src="https://cdn.picrew.me/shareImg/org/202601/2737227_BEaqXTzk.png" style="width:100%;height:100%;border-radius:10px;"> 
+            <p></p>
+        </div>
+        
+        <div class="scene">
+            Welcome to the cutest cafe in town! The air smells like sweet pastries and lavender. 
+            Pastel decorations everywhere, and the barista gives you a warm smile. 
+            What would you like to do?
+        </div>
+        
+        <div class="choices">
+            <a href="order.html" class="choice">🍰 Order a strawberry cake and tea</a>
+            <a href="chat.html" class="choice">💬 Chat with the cute barista</a>
+            <a href="read.html" class="choice">📚 Sit and read a manga</a>
+            <a href="dance.html" class="choice">💃 Join the impromptu dance party</a>
+        </div>
+        
+        <div style="text-align: center;">
+            <a href="index.html" class="back-button">🏠 Back to Main Menu</a>
+        </div>
+    </div>
+</body>
+</html>

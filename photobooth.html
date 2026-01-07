@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 Femboy Photo Booth 🌸</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --pastel-pink: #ffd1dc;
+            --pastel-blue: #b8e0f6;
+            --pastel-purple: #d9c5ee;
+            --pastel-lavender: #e6e6ff;
+            --pastel-mint: #c8f7dc;
+            --accent-pink: #ff8fab;
+            --accent-blue: #90c8ff;
+            --text-dark: #5a4a72;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--pastel-pink), var(--pastel-blue), var(--pastel-lavender));
+            color: var(--text-dark);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            padding: 15px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 25px;
+            border: 4px dashed var(--accent-pink);
+            box-shadow: 0 10px 40px rgba(255, 143, 171, 0.2);
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Comfortaa', cursive;
+            font-weight: 600;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, var(--accent-pink), var(--accent-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 3px 3px 0 rgba(255, 255, 255, 0.5);
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 25px;
+            opacity: 0.8;
+        }
+        
+        .emoji-title {
+            font-size: 1.8rem;
+            text-align: center;
+            margin: 15px 0;
+            letter-spacing: 8px;
+        }
+        
+        /* Camera Section */
+        .camera-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        #video-container {
+            position: relative;
+            width: 100%;
+            max-width: 640px;
+            height: 480px;
+            background: #2c2c2c;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 4px solid var(--accent-blue);
+            box-shadow: 0 8px 25px rgba(144, 200, 255, 0.3);
+        }
+        
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        #canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        
+        .partner-overlay {
+            position: absolute;
+            width: 180px;
+            height: auto;
+            max-height: 300px;
+            object-fit: contain;
+            pointer-events: none;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+            z-index: 10;
+            display: none;
+        }
+        
+        #partner-left {
+            bottom: 20px;
+            left: 20px;
+        }
+        
+        #partner-right {
+            bottom: 20px;
+            right: 20px;
+        }
+        
+        .camera-controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            max-width: 640px;
+        }
+        
+        button {
+            background: linear-gradient(45deg, var(--accent-pink), var(--accent-blue));
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 50px;
+            font-family: 'Comfortaa', cursive;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(144, 200, 255, 0.3);
+            flex-grow: 1;
+            justify-content: center;
+            min-width: 140px;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(144, 200, 255, 0.5);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Partner Selection */
+        .partner-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            border: 3px solid var(--pastel-purple);
+        }
+        
+        .partner-title {
+            color: var(--accent-pink);
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .partner-options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .partner-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            padding: 10px;
+            border-radius: 15px;
+            background: white;
+            border: 2px solid transparent;
+        }
+        
+        .partner-option:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-blue);
+        }
+        
+        .partner-option.selected {
+            border-color: var(--accent-pink);
+            background: var(--pastel-pink);
+            box-shadow: 0 0 15px rgba(255, 143, 171, 0.3);
+        }
+        
+        .partner-preview {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+        
+        .partner-name {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .no-partner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 120px;
+            height: 120px;
+            background: var(--pastel-lavender);
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+        
+        /* Control Section */
+        .control-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .control-panel {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 20px;
+            border: 3px solid var(--pastel-mint);
+        }
+        
+        .control-title {
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Instructions */
+        .instructions {
+            background: rgba(255, 250, 240, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px 0;
+            border: 3px solid #ffd700;
+            color: var(--text-dark);
+        }
+        
+        .instructions h3 {
+            color: #ffb347;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .instruction-step {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            border-left: 5px solid var(--accent-pink);
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: var(--accent-pink);
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        /* Warning */
+        .permission-warning {
+            background: #ffebee;
+            color: #d32f2f;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #ffcdd2;
+            text-align: center;
+            display: none;
+        }
+        
+        /* Next Button */
+        .next-button {
+            display: block;
+            margin: 25px auto 0;
+            background: linear-gradient(45deg, var(--accent-pink), #ff8fab);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-family: 'Comfortaa', cursive;
+            font-size: 1.2rem;
+            text-align: center;
+            width: fit-content;
+            box-shadow: 0 6px 20px rgba(255, 143, 171, 0.4);
+            transition: all 0.3s;
+        }
+        
+        .next-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 143, 171, 0.6);
+        }
+        
+        /* Back Button */
+        .back-button {
+            display: block;
+            margin: 15px auto 0;
+            background: linear-gradient(45deg, #32cd32, #00ced1);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-family: 'Comfortaa', cursive;
+            font-size: 1.1rem;
+            text-align: center;
+            width: fit-content;
+            box-shadow: 0 4px 15px rgba(50, 205, 50, 0.3);
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(50, 205, 50, 0.5);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            #video-container {
+                height: 400px;
+            }
+            
+            .control-section {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .instructions-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .partner-options {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .camera-controls button {
+                min-width: 45%;
+                padding: 10px 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            #video-container {
+                height: 350px;
+            }
+            
+            .camera-controls button {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌸 Femboy Photo Booth 🌸</h1>
+        <div class="subtitle">Capture cute moments with your virtual partner! 📸✨</div>
+        
+        <div class="emoji-title">🎀 🍰 ☕ 🌸 🎮</div>
+        
+        <div class="permission-warning" id="permission-warning">
+            ⚠️ Please allow camera access to use the photo booth!
+        </div>
+        
+        <div class="instructions">
+            <h3><span>📸</span> How to Use:</h3>
+            <div class="instructions-list">
+                <div class="instruction-step">
+                    <span class="step-number">1</span> Start your camera
+                </div>
+                <div class="instruction-step">
+                    <span class="step-number">2</span> Choose a partner (optional)
+                </div>
+                <div class="instruction-step">
+                    <span class="step-number">3</span> Take your photo
+                </div>
+                <div class="instruction-step">
+                    <span class="step-number">4</span> Customize it in the next step!
+                </div>
+            </div>
+        </div>
+        
+        <!-- Camera Section -->
+        <div class="camera-section">
+            <div id="video-container">
+                <video id="video" autoplay></video>
+                <canvas id="canvas"></canvas>
+                
+                <!-- Partner Overlays -->
+                <img id="partner-left" class="partner-overlay" src="https://media.discordapp.net/attachments/1264387503918547026/1458445876266668135/WYKyaAAAABklEQVQDAFsjaTLsjZoaAAAAAElFTkSuQmCC.png?ex=695fab11&is=695e5991&hm=55d894f144d0d24e2bc17ebb3ff756c8f9a7d45aa9d2dc1827fbcaf26459e165&=&format=webp&quality=lossless" alt="Partner 1">
+                <img id="partner-right" class="partner-overlay" src="https://media.discordapp.net/attachments/1264387503918547026/1458446703626686497/8AlZsuAAAABklEQVQDAIMn4GaOIxVfAAAAAElFTkSuQmCC.png?ex=695fabd6&is=695e5a56&hm=a0b71c76dc0d50672f21338abb5df9bf58fe7eecc12c3b06e6e386d4bcb9f6c8&=&format=webp&quality=lossless" alt="Partner 2">
+            </div>
+            
+            <div class="camera-controls">
+                <button id="start-camera">
+                    <span>📷</span> Start Camera
+                </button>
+                <button id="take-photo" disabled>
+                    <span>✨</span> Take Photo
+                </button>
+                <button id="reset-camera">
+                    <span>🔄</span> Reset
+                </button>
+            </div>
+        </div>
+        
+        <!-- Partner Selection -->
+        <div class="partner-section">
+            <h3 class="partner-title">👥 Choose Your Partner</h3>
+            <div class="partner-options">
+                <div class="partner-option" data-partner="none">
+                    <div class="no-partner">
+                        <span style="font-size: 2.5rem;">👤</span>
+                        <span>Solo</span>
+                    </div>
+                    <span class="partner-name">Take Photo Alone</span>
+                </div>
+                
+                <div class="partner-option" data-partner="left">
+                    <img class="partner-preview" src="https://media.discordapp.net/attachments/1264387503918547026/1458445876266668135/WYKyaAAAABklEQVQDAFsjaTLsjZoaAAAAAElFTkSuQmCC.png?ex=695fab11&is=695e5991&hm=55d894f144d0d24e2bc17ebb3ff756c8f9a7d45aa9d2dc1827fbcaf26459e165&=&format=webp&quality=lossless" alt="Partner 1">
+                    <span class="partner-name">Partner 1</span>
+                </div>
+                
+                <div class="partner-option" data-partner="right">
+                    <img class="partner-preview" src="https://media.discordapp.net/attachments/1264387503918547026/1458446703626686497/8AlZsuAAAABklEQVQDAIMn4GaOIxVfAAAAAElFTkSuQmCC.png?ex=695fabd6&is=695e5a56&hm=a0b71c76dc0d50672f21338abb5df9bf58fe7eecc12c3b06e6e386d4bcb9f6c8&=&format=webp&quality=lossless" alt="Partner 2">
+                    <span class="partner-name">Partner 2</span>
+                </div>
+                
+                <div class="partner-option" data-partner="both">
+                    <div class="no-partner">
+                        <span style="font-size: 2rem;">👥</span>
+                        <span>Both</span>
+                    </div>
+                    <span class="partner-name">Both Partners</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Control Section -->
+        <div class="control-section">
+            <div class="control-panel">
+                <h3 class="control-title"><span>⚙️</span> Camera Settings</h3>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <label style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" id="mirror-camera" checked>
+                        Mirror Camera
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px;">
+                        <input type="range" id="brightness" min="50" max="150" value="100">
+                        Brightness
+                    </label>
+                </div>
+            </div>
+            
+            <div class="control-panel">
+                <h3 class="control-title"><span>💡</span> Quick Tips</h3>
+                <ul style="padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+                    <li>Good lighting = better photos!</li>
+                    <li>Spacebar to take photo</li>
+                    <li>Escape to reset</li>
+                    <li>Try different partners!</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Next Button -->
+        <a href="customize.html" class="next-button" id="next-button" style="display: none;">
+            <span>🎨</span> Customize Your Photo
+        </a>
+        
+        <!-- Back Button to Main Page -->
+        <a href="index.html" class="back-button" style="margin-top: 30px;">
+            <span>🏠</span> Back to Main Menu
+        </a>
+        
+        <!-- If your main page has a different name, change "index.html" to whatever your main file is called -->
+    </div>
+
+    <script>
+        // DOM Elements
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const startCameraBtn = document.getElementById('start-camera');
+        const takePhotoBtn = document.getElementById('take-photo');
+        const resetCameraBtn = document.getElementById('reset-camera');
+        const nextButton = document.getElementById('next-button');
+        const permissionWarning = document.getElementById('permission-warning');
+        
+        // Partner elements
+        const partnerLeft = document.getElementById('partner-left');
+        const partnerRight = document.getElementById('partner-right');
+        const partnerOptions = document.querySelectorAll('.partner-option');
+        
+        // State variables
+        let stream = null;
+        let currentPhoto = null;
+        let selectedPartner = 'none';
+        let isMirrored = true;
+        
+        // Start Camera
+        startCameraBtn.addEventListener('click', async () => {
+            try {
+                permissionWarning.style.display = 'none';
+                
+                // Stop existing stream if any
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                
+                // Get camera access
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: { ideal: 640 },
+                        height: { ideal: 480 },
+                        facingMode: "user"
+                    } 
+                });
+                
+                video.srcObject = stream;
+                video.style.display = 'block';
+                canvas.style.display = 'none';
+                
+                // Apply mirror effect
+                video.style.transform = isMirrored ? 'scaleX(-1)' : 'scaleX(1)';
+                
+                // Update button states
+                startCameraBtn.disabled = true;
+                takePhotoBtn.disabled = false;
+                resetCameraBtn.disabled = false;
+                
+                console.log("Camera started successfully!");
+                
+            } catch (error) {
+                console.error("Camera error:", error);
+                permissionWarning.style.display = 'block';
+                permissionWarning.innerHTML = `
+                    ⚠️ Camera permission denied!<br>
+                    Please allow camera access in your browser settings.<br>
+                    <small>Error: ${error.message}</small>
+                `;
+            }
+        });
+        
+        // Take Photo - FIXED VERSION
+        takePhotoBtn.addEventListener('click', async () => {
+            const context = canvas.getContext('2d');
+            
+            // Set canvas size to match video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            // Apply mirror effect to canvas if needed
+            if (isMirrored) {
+                context.translate(canvas.width, 0);
+                context.scale(-1, 1);
+            }
+            
+            // Draw video frame
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Reset transform for drawing partners
+            if (isMirrored) {
+                context.setTransform(1, 0, 0, 1, 0, 0);
+            }
+            
+            // Create function to draw partners
+            const drawPartners = async () => {
+                // Draw selected partner(s) if any
+                if (selectedPartner === 'left' || selectedPartner === 'both') {
+                    const partnerImg = new Image();
+                    partnerImg.crossOrigin = "anonymous";
+                    partnerImg.src = partnerLeft.src;
+                    
+                    // Wait for image to load
+                    await new Promise((resolve) => {
+                        partnerImg.onload = () => {
+                            const partnerWidth = 180;
+                            const partnerHeight = partnerWidth * (partnerImg.height / partnerImg.width);
+                            let x = 20;
+                            let y = canvas.height - partnerHeight - 20;
+                            
+                            // Adjust x position if mirrored
+                            if (isMirrored) {
+                                x = canvas.width - partnerWidth - 20;
+                            }
+                            
+                            context.drawImage(partnerImg, x, y, partnerWidth, partnerHeight);
+                            resolve();
+                        };
+                        partnerImg.onerror = resolve; // If image fails to load, continue anyway
+                    });
+                }
+                
+                if (selectedPartner === 'right' || selectedPartner === 'both') {
+                    const partnerImg = new Image();
+                    partnerImg.crossOrigin = "anonymous";
+                    partnerImg.src = partnerRight.src;
+                    
+                    await new Promise((resolve) => {
+                        partnerImg.onload = () => {
+                            const partnerWidth = 180;
+                            const partnerHeight = partnerWidth * (partnerImg.height / partnerImg.width);
+                            let x = canvas.width - partnerWidth - 20;
+                            let y = canvas.height - partnerHeight - 20;
+                            
+                            // Adjust x position if mirrored
+                            if (isMirrored) {
+                                x = 20;
+                            }
+                            
+                            context.drawImage(partnerImg, x, y, partnerWidth, partnerHeight);
+                            resolve();
+                        };
+                        partnerImg.onerror = resolve; // If image fails to load, continue anyway
+                    });
+                }
+            };
+            
+            // Draw partners and wait for them to finish
+            await drawPartners();
+            
+            // Switch to canvas display
+            video.style.display = 'none';
+            canvas.style.display = 'block';
+            
+            // Save photo data
+            currentPhoto = canvas.toDataURL('image/png');
+            
+            // Save to localStorage for customization
+            localStorage.setItem('capturedPhoto', currentPhoto);
+            
+            // Show next button
+            nextButton.style.display = 'block';
+            
+            console.log("Photo taken! Ready for customization.");
+        });
+        
+        // Reset Camera
+        resetCameraBtn.addEventListener('click', () => {
+            if (stream) {
+                video.style.display = 'block';
+                canvas.style.display = 'none';
+                nextButton.style.display = 'none';
+                currentPhoto = null;
+            }
+        });
+        
+        // Partner Selection
+        partnerOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // Remove selection from all options
+                partnerOptions.forEach(opt => opt.classList.remove('selected'));
+                
+                // Select clicked option
+                option.classList.add('selected');
+                selectedPartner = option.dataset.partner;
+                
+                // Update partner overlays
+                updatePartnerOverlays();
+                
+                console.log(`Selected partner: ${selectedPartner}`);
+            });
+        });
+        
+        // Update partner overlays in camera view
+        function updatePartnerOverlays() {
+            partnerLeft.style.display = (selectedPartner === 'left' || selectedPartner === 'both') ? 'block' : 'none';
+            partnerRight.style.display = (selectedPartner === 'right' || selectedPartner === 'both') ? 'block' : 'none';
+            
+            // Apply mirror effect to partners
+            if (isMirrored) {
+                partnerLeft.style.transform = 'scaleX(-1)';
+                partnerRight.style.transform = 'scaleX(-1)';
+            } else {
+                partnerLeft.style.transform = 'scaleX(1)';
+                partnerRight.style.transform = 'scaleX(1)';
+            }
+        }
+        
+        // Camera settings
+        document.getElementById('mirror-camera').addEventListener('change', function() {
+            isMirrored = this.checked;
+            video.style.transform = isMirrored ? 'scaleX(-1)' : 'scaleX(1)';
+            updatePartnerOverlays();
+        });
+        
+        document.getElementById('brightness').addEventListener('input', function() {
+            video.style.filter = `brightness(${this.value}%)`;
+        });
+        
+        // Set default selection
+        document.querySelector('.partner-option[data-partner="none"]').classList.add('selected');
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ' && !takePhotoBtn.disabled) {
+                // Spacebar takes photo
+                takePhotoBtn.click();
+                e.preventDefault();
+            } else if (e.key === 'Escape') {
+                // Escape resets
+                resetCameraBtn.click();
+            } else if (e.key >= '1' && e.key <= '4') {
+                // Number keys select partners
+                const index = parseInt(e.key) - 1;
+                if (partnerOptions[index]) {
+                    partnerOptions[index].click();
+                }
+            }
+        });
+        
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+        
+        // Initialize
+        console.log("🌸 Photo Booth Ready! 🌸");
+    </script>
+</body>
+</html>

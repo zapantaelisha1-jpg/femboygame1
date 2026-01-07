@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cooking Adventure! 🍳</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #fff3e0, #ffecb3);
+            color: #f57c00;
+            font-family: 'Comic Sans MS', cursive;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .game-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 25px;
+            border: 4px solid #ffb74d;
+            box-shadow: 0 0 25px #ffcc80;
+        }
+        
+        .game-title {
+            font-size: 48px;
+            color: #f57c00;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #ffb74d;
+        }
+        
+        .stat-item {
+            text-align: center;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff9800;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #f57c00;
+        }
+        
+        .kitchen-area {
+            display: grid;
+            grid-template-columns: 200px 1fr 250px;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .ingredients-panel {
+            background: #fff8e1;
+            border-radius: 15px;
+            padding: 15px;
+            border: 3px solid #ffb74d;
+        }
+        
+        .ingredient-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .ingredient-item {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            cursor: grab;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .ingredient-item:hover {
+            transform: translateY(-3px);
+            border-color: #ff9800;
+        }
+        
+        .ingredient-emoji {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+        
+        .cooking-area {
+            background: #fff8e1;
+            border-radius: 20px;
+            padding: 20px;
+            border: 3px solid #ffb74d;
+            position: relative;
+        }
+        
+        .cooking-pot {
+            width: 200px;
+            height: 150px;
+            background: linear-gradient(to bottom, #795548, #5d4037);
+            border-radius: 0 0 100px 100px;
+            margin: 20px auto 40px;
+            position: relative;
+            overflow: hidden;
+            border: 5px solid #4e342e;
+        }
+        
+        .pot-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ff9800;
+            height: 0%;
+            transition: height 0.5s;
+            border-radius: 0 0 95px 95px;
+        }
+        
+        .ingredient-in-pot {
+            position: absolute;
+            font-size: 25px;
+            animation: float 3s infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        
+        .recipe-panel {
+            background: #fff8e1;
+            border-radius: 15px;
+            padding: 15px;
+            border: 3px solid #ffb74d;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        
+        .recipe-category {
+            margin-bottom: 20px;
+        }
+        
+        .recipe-item {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .recipe-emoji {
+            font-size: 30px;
+        }
+        
+        .recipe-discovered {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .recipe-undiscovered {
+            background: #f5f5f5;
+            border-left: 4px solid #9e9e9e;
+            opacity: 0.7;
+        }
+        
+        .controls-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .control-button {
+            background: linear-gradient(to right, #ff9800, #ff5722);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .control-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.3);
+        }
+        
+        .control-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .friends-panel {
+            background: #fff8e1;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            border: 3px solid #ffb74d;
+        }
+        
+        .friends-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .friend-card {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .friend-emoji {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+        
+        .serve-button {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+        
+        .cooking-timer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ff5722;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 16px;
+            display: none;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(to right, #4caf50, #8bc34a);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            animation: slideIn 0.5s;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .heart-animation {
+            position: fixed;
+            font-size: 25px;
+            animation: floatUp 1.5s forwards;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+        }
+        
+        .recipe-discovery {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.3);
+            text-align: center;
+            display: none;
+            z-index: 1000;
+            border: 5px solid #ff9800;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .action-button {
+            padding: 12px 25px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f57c00;
+            color: white;
+        }
+        
+        .ingredient-count {
+            font-size: 11px;
+            color: #666;
+        }
+        
+        .recipe-requirements {
+            font-size: 12px;
+            color: #666;
+            margin-top: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="game-title">🍳 Cooking Adventure! 🍳</h1>
+        
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value" id="score">0</div>
+                <div class="stat-label">Score</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="chefLevel">1</div>
+                <div class="stat-label">Chef Level</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="coins">0</div>
+                <div class="stat-label">🍰 Coins</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="recipesFound">0/20</div>
+                <div class="stat-label">Recipes Found</div>
+            </div>
+        </div>
+        
+        <!-- Main Kitchen Area -->
+        <div class="kitchen-area">
+            <!-- Ingredients Panel -->
+            <div class="ingredients-panel">
+                <h3 style="text-align: center; color: #f57c00;">🧺 Ingredients</h3>
+                <div class="ingredient-grid" id="ingredientsGrid">
+                    <!-- Ingredients will be added by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Cooking Area -->
+            <div class="cooking-area">
+                <div class="cooking-timer" id="cookingTimer">⏰ Cooking: 0s</div>
+                
+                <h3 style="text-align: center; color: #f57c00; margin-bottom: 10px;">🍳 Cooking Pot</h3>
+                
+                <div class="cooking-pot" id="cookingPot">
+                    <div class="pot-content" id="potContent"></div>
+                </div>
+                
+                <div id="ingredientsDisplay" style="text-align: center; margin: 10px 0; color: #666; min-height: 40px;">
+                    Drag ingredients here!
+                </div>
+                
+                <div id="recipeHint" style="text-align: center; font-size: 14px; color: #ff5722; min-height: 40px;">
+                    <!-- Recipe hints will appear here -->
+                </div>
+            </div>
+            
+            <!-- Recipe Book Panel -->
+            <div class="recipe-panel">
+                <h3 style="text-align: center; color: #f57c00;">📖 Recipe Book</h3>
+                
+                <div class="recipe-category">
+                    <h4 style="margin: 10px 0; color: #ff9800;">🎂 Cakes & Desserts</h4>
+                    <div id="dessertRecipes">
+                        <!-- Dessert recipes will be added by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="recipe-category">
+                    <h4 style="margin: 10px 0; color: #ff9800;">🍕 Meals & Snacks</h4>
+                    <div id="mealRecipes">
+                        <!-- Meal recipes will be added by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="recipe-category">
+                    <h4 style="margin: 10px 0; color: #ff9800;">🍹 Drinks</h4>
+                    <div id="drinkRecipes">
+                        <!-- Drink recipes will be added by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Cooking Controls -->
+        <div class="controls-bar">
+            <button class="control-button" onclick="startCooking()" id="cookButton">
+                🔥 Start Cooking
+            </button>
+            <button class="control-button" onclick="autoAddIngredients()" id="autoButton">
+                🎲 Random Ingredients
+            </button>
+            <button class="control-button" onclick="resetPot()" id="resetButton">
+                🗑️ Clear Pot
+            </button>
+            <button class="control-button" onclick="serveDish()" id="serveButton" disabled>
+                🍽️ Serve Dish
+            </button>
+        </div>
+        
+        <!-- Friends Panel -->
+        <div class="friends-panel">
+            <h3 style="text-align: center; color: #f57c00;">🌸 Friends to Serve</h3>
+            <div class="friends-grid" id="friendsGrid">
+                <!-- Friends will be added by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="picnic.html" class="action-button">
+                ← Back to Picnic
+            </a>
+            <a href="index.html" class="action-button">
+                🏠 Home
+            </a>
+        </div>
+    </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div style="font-size: 24px;" id="notificationIcon">🎉</div>
+        <div>
+            <div style="font-weight: bold;" id="notificationTitle">Success!</div>
+            <div style="font-size: 12px;" id="notificationText">Message here</div>
+        </div>
+    </div>
+    
+    <!-- Recipe Discovery Popup -->
+    <div class="recipe-discovery" id="recipeDiscovery">
+        <div style="font-size: 60px; margin-bottom: 10px;" id="discoveryEmoji">🍰</div>
+        <h2 style="color: #ff9800; margin-bottom: 10px;" id="discoveryTitle">New Recipe Discovered!</h2>
+        <div id="discoveryRecipe">Recipe Name</div>
+        <div style="margin: 15px 0; font-size: 14px;" id="discoveryIngredients">Ingredients: 🍓 + 🌾</div>
+        <button onclick="closeDiscovery()" style="background: #ff9800; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer;">
+            Continue Cooking!
+        </button>
+    </div>
+
+    <script>
+        // ========== GAME STATE ==========
+        let score = 0;
+        let chefLevel = 1;
+        let coins = 0;
+        let recipesFound = 0;
+        let totalRecipes = 20;
+        let currentIngredients = [];
+        let isCooking = false;
+        let cookingTimer = null;
+        let cookingTime = 0;
+        let currentDish = null;
+        let discoveredRecipes = new Set();
+        
+        // ========== INGREDIENTS ==========
+        const ingredients = [
+            { id: 'strawberry', name: 'Strawberry', emoji: '🍓', type: 'fruit' },
+            { id: 'blueberry', name: 'Blueberry', emoji: '🫐', type: 'fruit' },
+            { id: 'banana', name: 'Banana', emoji: '🍌', type: 'fruit' },
+            { id: 'apple', name: 'Apple', emoji: '🍎', type: 'fruit' },
+            { id: 'flour', name: 'Flour', emoji: '🌾', type: 'grain' },
+            { id: 'egg', name: 'Egg', emoji: '🥚', type: 'dairy' },
+            { id: 'milk', name: 'Milk', emoji: '🥛', type: 'dairy' },
+            { id: 'butter', name: 'Butter', emoji: '🧈', type: 'dairy' },
+            { id: 'sugar', name: 'Sugar', emoji: '🍬', type: 'sweetener' },
+            { id: 'chocolate', name: 'Chocolate', emoji: '🍫', type: 'sweetener' },
+            { id: 'cheese', name: 'Cheese', emoji: '🧀', type: 'dairy' },
+            { id: 'bread', name: 'Bread', emoji: '🍞', type: 'grain' },
+            { id: 'tomato', name: 'Tomato', emoji: '🍅', type: 'vegetable' },
+            { id: 'lettuce', name: 'Lettuce', emoji: '🥬', type: 'vegetable' },
+            { id: 'carrot', name: 'Carrot', emoji: '🥕', type: 'vegetable' },
+            { id: 'potato', name: 'Potato', emoji: '🥔', type: 'vegetable' },
+            { id: 'meat', name: 'Meat', emoji: '🥩', type: 'protein' },
+            { id: 'fish', name: 'Fish', emoji: '🐟', type: 'protein' },
+            { id: 'rice', name: 'Rice', emoji: '🍚', type: 'grain' },
+            { id: 'spices', name: 'Spices', emoji: '🧂', type: 'seasoning' }
+        ];
+        
+        // ========== RECIPES ==========
+        const recipes = [
+            // Desserts
+            { id: 'strawberry-cake', name: 'Strawberry Cake', emoji: '🍰', category: 'dessert',
+              ingredients: ['strawberry', 'flour', 'egg', 'sugar', 'butter'], points: 100, coins: 40 },
+            { id: 'chocolate-cake', name: 'Chocolate Cake', emoji: '🎂', category: 'dessert',
+              ingredients: ['chocolate', 'flour', 'egg', 'sugar', 'butter'], points: 120, coins: 50 },
+            { id: 'fruit-salad', name: 'Fruit Salad', emoji: '🥗', category: 'dessert',
+              ingredients: ['strawberry', 'blueberry', 'banana', 'apple'], points: 80, coins: 30 },
+            { id: 'pancakes', name: 'Pancakes', emoji: '🥞', category: 'dessert',
+              ingredients: ['flour', 'egg', 'milk', 'butter'], points: 90, coins: 35 },
+            { id: 'ice-cream', name: 'Ice Cream', emoji: '🍨', category: 'dessert',
+              ingredients: ['milk', 'sugar', 'strawberry'], points: 70, coins: 25 },
+            { id: 'cookies', name: 'Cookies', emoji: '🍪', category: 'dessert',
+              ingredients: ['flour', 'egg', 'sugar', 'butter', 'chocolate'], points: 85, coins: 32 },
+            
+            // Meals
+            { id: 'sandwich', name: 'Sandwich', emoji: '🥪', category: 'meal',
+              ingredients: ['bread', 'cheese', 'tomato', 'lettuce'], points: 75, coins: 28 },
+            { id: 'pizza', name: 'Pizza', emoji: '🍕', category: 'meal',
+              ingredients: ['flour', 'tomato', 'cheese', 'spices'], points: 110, coins: 45 },
+            { id: 'burger', name: 'Burger', emoji: '🍔', category: 'meal',
+              ingredients: ['bread', 'meat', 'cheese', 'lettuce', 'tomato'], points: 130, coins: 55 },
+            { id: 'sushi', name: 'Sushi', emoji: '🍣', category: 'meal',
+              ingredients: ['rice', 'fish', 'carrot'], points: 140, coins: 60 },
+            { id: 'fries', name: 'French Fries', emoji: '🍟', category: 'meal',
+              ingredients: ['potato', 'spices'], points: 60, coins: 22 },
+            { id: 'omelette', name: 'Omelette', emoji: '🍳', category: 'meal',
+              ingredients: ['egg', 'cheese', 'tomato'], points: 70, coins: 25 },
+            { id: 'stew', name: 'Vegetable Stew', emoji: '🥘', category: 'meal',
+              ingredients: ['potato', 'carrot', 'tomato', 'spices'], points: 95, coins: 38 },
+            
+            // Drinks
+            { id: 'smoothie', name: 'Fruit Smoothie', emoji: '🥤', category: 'drink',
+              ingredients: ['strawberry', 'banana', 'milk'], points: 65, coins: 20 },
+            { id: 'milkshake', name: 'Chocolate Milkshake', emoji: '🥛', category: 'drink',
+              ingredients: ['milk', 'chocolate', 'sugar'], points: 55, coins: 18 },
+            { id: 'juice', name: 'Apple Juice', emoji: '🧃', category: 'drink',
+              ingredients: ['apple'], points: 40, coins: 15 },
+            { id: 'tea', name: 'Herbal Tea', emoji: '🍵', category: 'drink',
+              ingredients: ['spices'], points: 35, coins: 12 },
+            
+            // Special/Secret Recipes
+            { id: 'rainbow-cake', name: 'Rainbow Cake', emoji: '🌈', category: 'dessert',
+              ingredients: ['strawberry', 'blueberry', 'chocolate', 'sugar', 'flour', 'egg', 'butter'], points: 200, coins: 80 },
+            { id: 'monster-burger', name: 'Monster Burger', emoji: '👾', category: 'meal',
+              ingredients: ['bread', 'meat', 'cheese', 'egg', 'tomato', 'lettuce'], points: 180, coins: 70 },
+            { id: 'magic-potion', name: 'Magic Potion', emoji: '🧪', category: 'drink',
+              ingredients: ['strawberry', 'blueberry', 'apple', 'spices'], points: 150, coins: 65 }
+        ];
+        
+        // ========== FRIENDS ==========
+        const friends = [
+            { id: 'lily', name: 'Lily', emoji: '👧', favorite: 'strawberry-cake' },
+            { id: 'rafayel', name: 'Rafayel', emoji: '🌸', favorite: 'chocolate-cake' },
+            { id: 'chloe', name: 'Chloe', emoji: '👱‍♀️', favorite: 'pancakes' },
+            { id: 'kaito', name: 'Kaito', emoji: '👨', favorite: 'sushi' },
+            { id: 'maya', name: 'Maya', emoji: '👩', favorite: 'rainbow-cake' }
+        ];
+        
+        let friendships = {};
+        
+        // ========== INITIALIZE GAME ==========
+        function initGame() {
+            // Initialize friendships
+            friends.forEach(friend => {
+                friendships[friend.id] = 50;
+            });
+            
+            // Mark some basic recipes as discovered
+            discoveredRecipes.add('strawberry-cake');
+            discoveredRecipes.add('pancakes');
+            discoveredRecipes.add('sandwich');
+            discoveredRecipes.add('smoothie');
+            
+            // Update recipe count
+            recipesFound = discoveredRecipes.size;
+            
+            // Create ingredients grid
+            createIngredientsGrid();
+            
+            // Create recipe book
+            createRecipeBook();
+            
+            // Create friends grid
+            createFriendsGrid();
+            
+            // Set up drag and drop
+            setupDragAndDrop();
+            
+            // Update stats
+            updateStats();
+            
+            // Show welcome message
+            setTimeout(() => {
+                showNotification("Welcome to Cooking!", "Drag ingredients into the pot to cook!");
+            }, 1000);
+        }
+        
+        // ========== CREATE INGREDIENTS GRID ==========
+        function createIngredientsGrid() {
+            const grid = document.getElementById('ingredientsGrid');
+            grid.innerHTML = '';
+            
+            ingredients.forEach(ingredient => {
+                const div = document.createElement('div');
+                div.className = 'ingredient-item';
+                div.draggable = true;
+                div.dataset.ingredient = ingredient.id;
+                div.innerHTML = `
+                    <div class="ingredient-emoji">${ingredient.emoji}</div>
+                    <div>${ingredient.name}</div>
+                    <div class="ingredient-count">∞</div>
+                `;
+                grid.appendChild(div);
+            });
+        }
+        
+        // ========== CREATE RECIPE BOOK ==========
+        function createRecipeBook() {
+            const dessertDiv = document.getElementById('dessertRecipes');
+            const mealDiv = document.getElementById('mealRecipes');
+            const drinkDiv = document.getElementById('drinkRecipes');
+            
+            dessertDiv.innerHTML = '';
+            mealDiv.innerHTML = '';
+            drinkDiv.innerHTML = '';
+            
+            recipes.forEach(recipe => {
+                const div = document.createElement('div');
+                div.className = `recipe-item ${discoveredRecipes.has(recipe.id) ? 'recipe-discovered' : 'recipe-undiscovered'}`;
+                div.innerHTML = `
+                    <div class="recipe-emoji">${recipe.emoji}</div>
+                    <div>
+                        <div>${discoveredRecipes.has(recipe.id) ? recipe.name : '???'}</div>
+                        <div class="recipe-requirements">${discoveredRecipes.has(recipe.id) ? 
+                            recipe.ingredients.map(id => ingredients.find(i => i.id === id)?.emoji || '❓').join(' ') : 
+                            `Requires ${recipe.ingredients.length} ingredients`}</div>
+                    </div>
+                `;
+                
+                if (recipe.category === 'dessert') dessertDiv.appendChild(div);
+                else if (recipe.category === 'meal') mealDiv.appendChild(div);
+                else if (recipe.category === 'drink') drinkDiv.appendChild(div);
+            });
+        }
+        
+        // ========== CREATE FRIENDS GRID ==========
+        function createFriendsGrid() {
+            const grid = document.getElementById('friendsGrid');
+            grid.innerHTML = '';
+            
+            friends.forEach(friend => {
+                const div = document.createElement('div');
+                div.className = 'friend-card';
+                div.innerHTML = `
+                    <div class="friend-emoji">${friend.emoji}</div>
+                    <div style="font-weight: bold;">${friend.name}</div>
+                    <div style="font-size: 10px; margin: 3px 0;">❤️ ${friendships[friend.id]}</div>
+                    <div style="font-size: 9px; color: #666;">Loves: ${recipes.find(r => r.id === friend.favorite)?.emoji || '🍰'}</div>
+                    <button class="serve-button" onclick="serveFriend('${friend.id}')">Serve</button>
+                `;
+                grid.appendChild(div);
+            });
+        }
+        
+        // ========== DRAG AND DROP ==========
+        function setupDragAndDrop() {
+            const pot = document.getElementById('cookingPot');
+            
+            // Add drag event listeners to all ingredient items
+            document.querySelectorAll('.ingredient-item').forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', this.dataset.ingredient);
+                });
+            });
+            
+            // Pot drop zone
+            pot.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#ff9800';
+            });
+            
+            pot.addEventListener('dragleave', function() {
+                this.style.borderColor = '#4e342e';
+            });
+            
+            pot.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#4e342e';
+                
+                const ingredientId = e.dataTransfer.getData('text/plain');
+                addIngredientToPot(ingredientId);
+            });
+        }
+        
+        // ========== ADD INGREDIENT TO POT ==========
+        function addIngredientToPot(ingredientId) {
+            if (isCooking) {
+                showNotification("Wait!", "Can't add ingredients while cooking!");
+                return;
+            }
+            
+            if (currentIngredients.length >= 8) {
+                showNotification("Pot Full!", "Maximum 8 ingredients!");
+                return;
+            }
+            
+            currentIngredients.push(ingredientId);
+            updatePotDisplay();
+            
+            // Add floating emoji
+            const pot = document.getElementById('cookingPot');
+            const emoji = document.createElement('div');
+            emoji.className = 'ingredient-in-pot';
+            emoji.textContent = ingredients.find(i => i.id === ingredientId)?.emoji || '❓';
+            emoji.style.left = Math.random() * 150 + 'px';
+            emoji.style.bottom = Math.random() * 80 + 'px';
+            pot.appendChild(emoji);
+            
+            // Update pot fill
+            updatePotFill();
+            
+            // Check for recipe
+            checkRecipe();
+            
+            // Enable serve button if we have ingredients
+            document.getElementById('serveButton').disabled = currentIngredients.length === 0;
+        }
+        
+        // ========== UPDATE POT DISPLAY ==========
+        function updatePotDisplay() {
+            const display = document.getElementById('ingredientsDisplay');
+            if (currentIngredients.length === 0) {
+                display.innerHTML = "Drag ingredients here!";
+            } else {
+                const emojis = currentIngredients.map(id => 
+                    ingredients.find(i => i.id === id)?.emoji || '❓'
+                );
+                display.innerHTML = `Ingredients: ${emojis.join(' ')} (${currentIngredients.length}/8)`;
+            }
+        }
+        
+        function updatePotFill() {
+            const fill = document.getElementById('potContent');
+            const percent = Math.min(currentIngredients.length * 12.5, 100);
+            fill.style.height = percent + '%';
+        }
+        
+        // ========== CHECK RECIPE ==========
+        function checkRecipe() {
+            if (currentIngredients.length === 0) {
+                document.getElementById('recipeHint').innerHTML = '';
+                currentDish = null;
+                return;
+            }
+            
+            // Sort ingredients for comparison
+            const sortedCurrent = [...currentIngredients].sort();
+            
+            // Check all recipes
+            for (const recipe of recipes) {
+                const sortedRecipe = [...recipe.ingredients].sort();
+                
+                if (JSON.stringify(sortedCurrent) === JSON.stringify(sortedRecipe)) {
+                    // Exact match found!
+                    currentDish = recipe;
+                    
+                    if (!discoveredRecipes.has(recipe.id)) {
+                        // NEW RECIPE DISCOVERED!
+                        discoveredRecipes.add(recipe.id);
+                        recipesFound = discoveredRecipes.size;
+                        showRecipeDiscovery(recipe);
+                    }
+                    
+                    document.getElementById('recipeHint').innerHTML = 
+                        `<span style="color:#4caf50">✓ Recipe found: ${recipe.name} ${recipe.emoji}</span>`;
+                    return;
+                }
+                
+                // Check if current ingredients are a subset of any recipe
+                if (sortedCurrent.every(ing => sortedRecipe.includes(ing)) && 
+                    sortedCurrent.length < sortedRecipe.length) {
+                    const missing = sortedRecipe.filter(ing => !sortedCurrent.includes(ing));
+                    const missingEmojis = missing.map(id => ingredients.find(i => i.id === id)?.emoji || '?').join(' ');
+                    document.getElementById('recipeHint').innerHTML = 
+                        `Add: ${missingEmojis} to make ${discoveredRecipes.has(recipe.id) ? recipe.name : 'a recipe'}!`;
+                    return;
+                }
+            }
+            
+            // No matching recipe found
+            document.getElementById('recipeHint').innerHTML = 
+                '<span style="color:#ff5722">No known recipe. Try different combinations!</span>';
+            currentDish = null;
+        }
+        
+        // ========== COOKING FUNCTIONS ==========
+        function startCooking() {
+            if (currentIngredients.length === 0) {
+                showNotification("Empty Pot!", "Add ingredients first!");
+                return;
+            }
+            
+            if (isCooking) return;
+            
+            isCooking = true;
+            cookingTime = 0;
+            
+            // Update UI
+            document.getElementById('cookButton').disabled = true;
+            document.getElementById('autoButton').disabled = true;
+            document.getElementById('resetButton').disabled = true;
+            document.getElementById('serveButton').disabled = true;
+            
+            // Show timer
+            const timer = document.getElementById('cookingTimer');
+            timer.style.display = 'block';
+            
+            // Cooking animation
+            const potContent = document.getElementById('potContent');
+            potContent.style.background = '#ff5722';
+            
+            // Start timer
+            cookingTimer = setInterval(() => {
+                cookingTime++;
+                timer.textContent = `⏰ Cooking: ${cookingTime}s`;
+                
+                if (cookingTime >= 3) {
+                    finishCooking();
+                }
+            }, 1000);
+        }
+        
+        function finishCooking() {
+            clearInterval(cookingTimer);
+            isCooking = false;
+            
+            // Update UI
+            document.getElementById('cookButton').disabled = false;
+            document.getElementById('autoButton').disabled = false;
+            document.getElementById('resetButton').disabled = false;
+            document.getElementById('serveButton').disabled = false;
+            
+            // Hide timer
+            document.getElementById('cookingTimer').style.display = 'none';
+            
+            // Change pot to cooked color
+            const potContent = document.getElementById('potContent');
+            potContent.style.background = '#8d6e63';
+            
+            // Show notification
+            if (currentDish) {
+                showNotification("Perfect!", `Successfully cooked ${currentDish.name}! Ready to serve!`, '🍳');
+            } else {
+                showNotification("Cooking Complete!", "Food is ready! (Experimental dish)", '🍲');
+            }
+        }
+        
+        // ========== RANDOM INGREDIENTS ==========
+        function autoAddIngredients() {
+            if (isCooking) {
+                showNotification("Wait!", "Can't add while cooking!");
+                return;
+            }
+            
+            if (currentIngredients.length >= 8) {
+                showNotification("Pot Full!", "Clear pot first!");
+                return;
+            }
+            
+            // Clear pot first
+            resetPot();
+            
+            // Add 3-5 random ingredients
+            const count = 3 + Math.floor(Math.random() * 3);
+            for (let i = 0; i < count; i++) {
+                const randomIngredient = ingredients[Math.floor(Math.random() * ingredients.length)];
+                addIngredientToPot(randomIngredient.id);
+            }
+            
+            showNotification("Random Ingredients!", "Try cooking these!", '🎲');
+        }
+        
+        function resetPot() {
+            if (isCooking) {
+                showNotification("Wait!", "Can't reset while cooking!");
+                return;
+            }
+            
+            currentIngredients = [];
+            currentDish = null;
+            updatePotDisplay();
+            updatePotFill();
+            
+            // Clear floating emojis
+            document.querySelectorAll('.ingredient-in-pot').forEach(el => el.remove());
+            
+            // Reset pot color
+            const potContent = document.getElementById('potContent');
+            potContent.style.background = '#ff9800';
+            
+            // Clear hints
+            document.getElementById('recipeHint').innerHTML = '';
+            
+            // Disable serve button
+            document.getElementById('serveButton').disabled = true;
+        }
+        
+        // ========== SERVING FUNCTIONS ==========
+        function serveDish() {
+            if (currentIngredients.length === 0) {
+                showNotification("Empty!", "Nothing to serve!");
+                return;
+            }
+            
+            let points = 0;
+            let coinBonus = 0;
+            let message = "";
+            
+            if (currentDish) {
+                // Exact recipe match
+                points = currentDish.points;
+                coinBonus = currentDish.coins;
+                message = `Served ${currentDish.name}! Earned ${points} points!`;
+                
+                // Bonus for discovering new recipes
+                if (!discoveredRecipes.has(currentDish.id)) {
+                    discoveredRecipes.add(currentDish.id);
+                    recipesFound = discoveredRecipes.size;
+                    points += 50;
+                    coinBonus += 20;
+                    message += " (New recipe bonus!)";
+                    createRecipeBook();
+                }
+            } else {
+                // Experimental dish (no exact recipe)
+                points = currentIngredients.length * 10;
+                coinBonus = currentIngredients.length * 3;
+                message = `Served experimental dish! Earned ${points} points!`;
+            }
+            
+            // Add points and coins
+            score += points;
+            coins += coinBonus;
+            
+            // Check for level up
+            if (score >= chefLevel * 500) {
+                chefLevel++;
+                createHearts();
+                showNotification("🎉 Level Up!", `You're now Chef Level ${chefLevel}!`, '👨‍🍳');
+            }
+            
+            // Update stats
+            updateStats();
+            
+            // Show success
+            showNotification("Dish Served!", message, '🍽️');
+            
+            // Reset pot
+            resetPot();
+        }
+        
+        function serveFriend(friendId) {
+            if (currentIngredients.length === 0) {
+                showNotification("No Food!", "Make a dish first!");
+                return;
+            }
+            
+            const friend = friends.find(f => f.id === friendId);
+            const favoriteRecipe = recipes.find(r => r.id === friend.favorite);
+            
+            let bonus = 0;
+            let friendshipBonus = 0;
+            let message = `Served food to ${friend.name}!`;
+            
+            // Check if it's their favorite dish
+            if (currentDish && currentDish.id === friend.favorite) {
+                bonus = 100;
+                friendshipBonus = 25;
+                message += ` They LOVE ${favoriteRecipe.name}! +${friendshipBonus} friendship!`;
+                createHearts();
+            } else if (currentDish) {
+                bonus = 50;
+                friendshipBonus = 10;
+                message += ` They like ${currentDish.name}! +${friendshipBonus} friendship!`;
+            } else {
+                bonus = 20;
+                friendshipBonus = 5;
+                message += ` They try the experimental dish. +${friendshipBonus} friendship!`;
+            }
+            
+            // Add bonuses
+            score += bonus;
+            coins += Math.floor(bonus / 2);
+            friendships[friendId] += friendshipBonus;
+            
+            // Update friendship display
+            createFriendsGrid();
+            
+            // Update stats
+            updateStats();
+            
+            // Show notification
+            showNotification("Friend Happy!", message, '💖');
+            
+            // Reset pot
+            resetPot();
+        }
+        
+        // ========== RECIPE DISCOVERY ==========
+        function showRecipeDiscovery(recipe) {
+            const popup = document.getElementById('recipeDiscovery');
+            document.getElementById('discoveryEmoji').textContent = recipe.emoji;
+            document.getElementById('discoveryTitle').textContent = '✨ New Recipe Discovered! ✨';
+            document.getElementById('discoveryRecipe').textContent = recipe.name;
+            
+            const ingredientEmojis = recipe.ingredients.map(id => 
+                ingredients.find(i => i.id === id)?.emoji || '❓'
+            ).join(' + ');
+            document.getElementById('discoveryIngredients').textContent = `Ingredients: ${ingredientEmojis}`;
+            
+            popup.style.display = 'block';
+            
+            // Add bonus for discovery
+            score += 100;
+            coins += 50;
+            updateStats();
+        }
+        
+        function closeDiscovery() {
+            document.getElementById('recipeDiscovery').style.display = 'none';
+            createRecipeBook(); // Update recipe book to show new recipe
+        }
+        
+        // ========== HELPER FUNCTIONS ==========
+        function updateStats() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('chefLevel').textContent = chefLevel;
+            document.getElementById('coins').textContent = coins;
+            document.getElementById('recipesFound').textContent = `${recipesFound}/${totalRecipes}`;
+        }
+        
+        function showNotification(title, text, icon = '🎉') {
+            const notification = document.getElementById('notification');
+            document.getElementById('notificationIcon').textContent = icon;
+            document.getElementById('notificationTitle').textContent = title;
+            document.getElementById('notificationText').textContent = text;
+            notification.style.display = 'flex';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        function createHearts() {
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart-animation';
+                    heart.innerHTML = '💖';
+                    heart.style.left = Math.random() * window.innerWidth + 'px';
+                    heart.style.top = (window.innerHeight - 50) + 'px';
+                    
+                    document.body.appendChild(heart);
+                    
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 1500);
+                }, i * 150);
+            }
+        }
+        
+        // ========== INITIALIZE ON LOAD ==========
+        window.onload = initGame;
+    </script>
+</body>
+</html>

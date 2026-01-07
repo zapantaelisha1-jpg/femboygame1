@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Surprise!</title>
+    <style>
+        body {
+            background: linear-gradient(45deg, #ffb6c1, #e6e6fa, #d8bfd8);
+            color: #ff69b4;
+            font-family: 'Comic Sans MS', cursive;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            text-align: center;
+            animation: rainbow 5s infinite;
+        }
+        
+        @keyframes rainbow {
+            0% { background: linear-gradient(45deg, #ffb6c1, #e6e6fa); }
+            50% { background: linear-gradient(45deg, #e6e6fa, #d8bfd8); }
+            100% { background: linear-gradient(45deg, #d8bfd8, #ffb6c1); }
+        }
+        
+        .surprise-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 30px;
+            border: 5px double #ff69b4;
+            box-shadow: 0 0 40px #ffb6c1;
+        }
+        
+        .surprise-title {
+            font-size: 50px;
+            color: #9370db;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 0 #ffb6c1;
+        }
+        
+        .surprise-image {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border: 5px solid #9370db;
+            border-radius: 20px;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 0 20px #ba55d3;
+        }
+        
+        .message {
+            font-size: 22px;
+            color: #da70d6;
+            margin: 30px 0;
+            line-height: 1.6;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 15px 30px;
+            background: linear-gradient(to right, #ff69b4, #da70d6);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 20px;
+            border: 3px solid #9370db;
+            transition: all 0.3s;
+        }
+        
+        .back-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px #ff69b4;
+        }
+        
+        .hearts {
+            font-size: 40px;
+            margin: 20px 0;
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="surprise-container">
+        <div class="hearts">💖 🎁 🌈 💝</div>
+        
+        <h1 class="surprise-title">🎁 SURPRISE! 🎁</h1>
+        
+        <div class="message">
+            You found the secret surprise!<br>
+            Here's a special image just for you! 🌸
+        </div>
+        
+        <!-- YOUR IMAGE - Replace the URL with yours -->
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQy2z6epFbxY8t40jKFOV-QZi2hcYd2yuBc_A&s" 
+             alt="Surprise Image" 
+             class="surprise-image">
+        
+        <div class="message">
+            Isn't it cute? 💕<br>
+            Thanks for playing our Femboy Adventure! 🌈
+        </div>
+        
+        <a href="index.html" class="back-button">🏠 Back to Main Menu</a>
+        
+        <div class="hearts">🌸 ✨ 🎀 ✨</div>
+    </div>
+</body>
+</html>
