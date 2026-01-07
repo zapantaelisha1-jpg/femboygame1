@@ -1,107 +1,170 @@
-// Alternative: Simple Node.js server for real chat
-// Save as server.js and run: node server.js
-
-const express = require('express');
+// server.js - Simple WebSocket chat server
+const WebSocket = require('ws');
 const http = require('http');
-const socketIo = require('socket.io');
-const cors = require('cors');
+const express = require('express');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
+
+// Serve static files (HTML, CSS, JS)
+app.use(express.static('.'));
+
+// Serve main pages
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.use(cors());
-app.use(express.static('.')); // Serve HTML files from current directory
+app.get('/cafe-game', (req, res) => {
+    res.sendFile(path.join(__dirname, 'cafe-game.html'));
+});
 
-let users = new Map(); // socket.id -> user data
-let messages = [];
+app.get('/chat-room', (req, res) => {
+    res.sendFile(path.join(__dirname, 'chat-room.html'));
+});
 
-io.on('connection', (socket) => {
-    console.log('New user connected:', socket.id);
+// Create WebSocket server
+const wss = new WebSocket.Server({ server });
+
+// Store connected users
+const users = new Map();
+const messages = [];
+const MAX_MESSAGES = 100;
+
+wss.on('connection', (ws) => {
+    console.log('New client connected');
     
-    // Send existing users and messages
-    socket.emit('init', { 
-        users: Array.from(users.values()), 
-        messages: messages.slice(-50) // Last 50 messages
-    });
+    // Generate unique ID for this user
+    const userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    let username = 'Guest🌸';
     
-    // Handle new user
-    socket.on('join', (username) => {
-        const user = {
-            id: socket.id,
-            name: username,
-            emoji: getRandomEmoji(),
-            joined: new Date().toISOString()
-        };
-        
-        users.set(socket.id, user);
-        socket.username = username;
-        
-        // Broadcast new user to all
-        io.emit('userJoined', user);
-        console.log(`${username} joined the chat`);
-        
-        // Broadcast user list update
-        io.emit('userList', Array.from(users.values()));
-    });
+    // Send existing messages to new user
+    ws.send(JSON.stringify({
+        type: 'init',
+        messages: messages.slice(-50),
+        userId: userId
+    }));
     
-    // Handle new message
-    socket.on('sendMessage', (messageData) => {
-        const message = {
-            id: Date.now(),
-            userId: socket.id,
-            username: socket.username,
-            content: messageData.content,
-            timestamp: new Date().toISOString()
-        };
-        
-        messages.push(message);
-        
-        // Keep only last 1000 messages
-        if (messages.length > 1000) {
-            messages = messages.slice(-1000);
-        }
-        
-        // Broadcast message to all
-        io.emit('newMessage', message);
-        console.log(`New message from ${socket.username}: ${messageData.content}`);
-    });
-    
-    // Handle user typing
-    socket.on('typing', (isTyping) => {
-        socket.broadcast.emit('userTyping', {
-            userId: socket.id,
-            username: socket.username,
-            isTyping
-        });
-    });
-    
-    // Handle user leaving
-    socket.on('disconnect', () => {
-        if (users.has(socket.id)) {
-            const disconnectedUser = users.get(socket.id);
-            users.delete(socket.id);
+    ws.on('message', (data) => {
+        try {
+            const message = JSON.parse(data);
             
-            // Broadcast user left to all
-            io.emit('userLeft', disconnectedUser);
-            io.emit('userList', Array.from(users.values()));
-            console.log(`${disconnectedUser.name} left the chat`);
+            switch (message.type) {
+                case 'join':
+                    username = message.username || 'Guest🌸';
+                    users.set(ws, {
+                        id: userId,
+                        username: username,
+                        emoji: message.emoji || '🌸',
+                        joined: Date.now()
+                    });
+                    
+                    // Broadcast user list update
+                    broadcastUserList();
+                    
+                    // Broadcast join message
+                    broadcast({
+                        type: 'system',
+                        content: `${username} joined the chat! 💕`
+                    }, ws);
+                    break;
+                    
+                case 'message':
+                    if (!username || username === 'Guest🌸') {
+                        username = 'Guest🌸' + Math.floor(Math.random() * 999);
+                    }
+                    
+                    const chatMessage = {
+                        id: Date.now(),
+                        userId: userId,
+                        username: username,
+                        content: message.content,
+                        emoji: getEmojiForUser(username),
+                        timestamp: Date.now(),
+                        type: 'chat'
+                    };
+                    
+                    messages.push(chatMessage);
+                    
+                    // Keep only recent messages
+                    if (messages.length > MAX_MESSAGES) {
+                        messages.shift();
+                    }
+                    
+                    // Broadcast to all clients
+                    broadcast({
+                        type: 'message',
+                        message: chatMessage
+                    });
+                    break;
+                    
+                case 'typing':
+                    broadcast({
+                        type: 'typing',
+                        userId: userId,
+                        username: username,
+                        isTyping: message.isTyping
+                    }, ws);
+                    break;
+            }
+        } catch (error) {
+            console.error('Error parsing message:', error);
         }
+    });
+    
+    ws.on('close', () => {
+        if (users.has(ws)) {
+            const user = users.get(ws);
+            users.delete(ws);
+            
+            // Broadcast user left
+            broadcast({
+                type: 'system',
+                content: `${user.username} left the chat 👋`
+            });
+            
+            // Update user list
+            broadcastUserList();
+        }
+        console.log('Client disconnected');
+    });
+    
+    ws.on('error', (error) => {
+        console.error('WebSocket error:', error);
     });
 });
 
-function getRandomEmoji() {
-    const emojis = ['💖', '🌸', '✨', '🎀', '💕', '💗', '💓', '💞', '💝', '💘'];
-    return emojis[Math.floor(Math.random() * emojis.length)];
+function broadcast(data, excludeWs = null) {
+    const message = JSON.stringify(data);
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN && client !== excludeWs) {
+            client.send(message);
+        }
+    });
 }
 
+function broadcastUserList() {
+    const userList = Array.from(users.values());
+    broadcast({
+        type: 'userList',
+        users: userList,
+        onlineCount: userList.length
+    });
+}
+
+function getEmojiForUser(username) {
+    const emojis = ['💖', '🌸', '✨', '🎀', '💕', '💗', '💓', '💞', '💝', '💘'];
+    let hash = 0;
+    for (let i = 0; i < username.length; i++) {
+        hash = username.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return emojis[Math.abs(hash) % emojis.length];
+}
+
+// Start server
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`Femboy Cafe Chat Server running on port ${PORT}`);
-    console.log(`Open http://localhost:${PORT}/chat-room.html in your browser`);
+    console.log(`🚀 Femboy Cafe Chat Server running on port ${PORT}`);
+    console.log(`🌐 Open http://localhost:${PORT} in your browser`);
+    console.log(`💬 WebSocket server ready at ws://localhost:${PORT}`);
 });
