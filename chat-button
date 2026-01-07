@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Femboy Cafe Chat</title>
+    <style>
+        body {
+            background: linear-gradient(45deg, #ffb6c1, #e6e6fa);
+            color: #ff69b4;
+            font-family: 'Comic Sans MS', cursive;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            text-align: center;
+        }
+        
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 30px;
+            border: 5px dashed #ff69b4;
+            box-shadow: 0 0 30px #ffb6c1;
+        }
+        
+        .game-title {
+            font-size: 60px;
+            color: #ff69b4;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 0 #ffb6c1;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            color: #9370db;
+            margin-bottom: 40px;
+        }
+        
+        .cafe-emoji {
+            font-size: 50px;
+            margin: 20px 0;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .header-image {
+            width: 300px;
+            height: 200px;
+            border: 3px dashed #ff69b4;
+            border-radius: 15px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+        
+        .header-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        
+        .chat-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff8fab, #90c8ff, #ffb6c1);
+            color: white;
+            text-decoration: none;
+            padding: 25px 50px;
+            border-radius: 50px;
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 32px;
+            margin: 40px 0;
+            border: 5px solid #ff69b4;
+            transition: all 0.5s;
+            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 35px rgba(255, 105, 180, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4); }
+        }
+        
+        .chat-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.7);
+            animation: none;
+        }
+        
+        .instructions {
+            background: linear-gradient(to bottom, #ffe6f2, #f0e6ff);
+            padding: 25px;
+            border-radius: 25px;
+            border: 3px solid #9370db;
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        .instructions h3 {
+            color: #9370db;
+            font-size: 24px;
+            margin-top: 0;
+            text-align: center;
+        }
+        
+        .instructions ul {
+            font-size: 18px;
+            color: #ff69b4;
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        .back-button {
+            display: inline-block;
+            background: linear-gradient(to right, #90c8ff, #ff8fab);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 20px;
+            margin-top: 20px;
+            border: 3px solid #ff69b4;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5);
+        }
+        
+        .femboy-character {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #90c8ff, #ff8fab);
+            border-radius: 50%;
+            margin: 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            border: 5px solid #ff69b4;
+            animation: spin 20s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .character-dialogue {
+            background: white;
+            padding: 20px;
+            border-radius: 25px;
+            border: 3px solid #90c8ff;
+            margin-top: 20px;
+            font-size: 22px;
+            position: relative;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .character-dialogue:before {
+            content: "";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 15px solid #90c8ff;
+        }
+        
+        .online-counter {
+            font-size: 18px;
+            color: #9370db;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-block;
+            border: 2px solid #ff69b4;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="game-title">💬 Femboy Cafe Chat 💬</h1>
+        <div class="subtitle">✨ Chat with other cafe visitors in real-time! ✨</div>
+        
+        <div class="header-image">
+            <img src="https://i.pinimg.com/1200x/43/dd/89/43dd89365bb194d7be14791ab8115e46.jpg" alt="Femboy Cafe">
+        </div>
+        
+        <div class="cafe-emoji">💖 ☕ 🎀 💬 ✨</div>
+        
+        <div class="online-counter">
+            <span id="onlineCount">0</span> people chatting right now!
+        </div>
+        
+        <div class="femboy-character">🌸</div>
+        <div class="character-dialogue">
+            Hi there! I'm Zidaine! Ready to meet other cute cafe visitors? 💕
+        </div>
+        
+        <a href="chat-room.html" class="chat-button">
+            🎀 Enter Chat Room 🎀
+        </a>
+        
+        <div class="instructions">
+            <h3>🌸 Chat Room Features 🌸</h3>
+            <ul>
+                <li>💬 <strong>Real-time messaging</strong> with everyone online</li>
+                <li>🎭 <strong>Choose a cute username</strong> when you join</li>
+                <li>🌈 <strong>Colorful chat bubbles</strong> with pastel colors</li>
+                <li>✨ <strong>Special emoji reactions</strong> to messages</li>
+                <li>👥 <strong>See who's online</strong> in real-time</li>
+                <li>🔔 <strong>Notification sounds</strong> for new messages</li>
+                <li>🎵 <strong>Cute background music</strong> option</li>
+                <li>💝 <strong>Send virtual hugs</strong> and cute gifts</li>
+            </ul>
+        </div>
+        
+        <div style="margin-top: 30px;">
+            <a href="index.html" class="back-button">
+                <span>🏠</span> Back to Main Menu
+            </a>
+            <a href="cafe-game.html" class="back-button" style="margin-left: 15px;">
+                <span>🍰</span> Back to Cake Ordering
+            </a>
+        </div>
+        
+        <div style="margin-top: 40px; color: #9370db;">
+            💖 Made by Elisha! 💖 (Requested by Zidaine and Amir)
+        </div>
+    </div>
+    
+    <script>
+        // Simulate online users count
+        function updateOnlineCount() {
+            // In a real app, this would connect to a server
+            // For demo, we'll simulate random numbers
+            const baseCount = Math.floor(Math.random() * 5) + 3;
+            document.getElementById('onlineCount').textContent = baseCount;
+        }
+        
+        updateOnlineCount();
+        setInterval(updateOnlineCount, 10000); // Update every 10 seconds
+        
+        // Add entrance animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const button = document.querySelector('.chat-button');
+            button.style.opacity = '0';
+            button.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                button.style.transition = 'opacity 1s, transform 1s';
+                button.style.opacity = '1';
+                button.style.transform = 'translateY(0)';
+            }, 500);
+        });
+    </script>
+</body>
+</html>
