@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Femboy Cafe Ordering Game</title>
+    <style>
+        body {
+            background: linear-gradient(45deg, #ffb6c1, #e6e6fa);
+            color: #ff69b4;
+            font-family: 'Comic Sans MS', cursive;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            text-align: center;
+        }
+        
+        .game-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 30px;
+            border: 5px dashed #ff69b4;
+            box-shadow: 0 0 30px #ffb6c1;
+        }
+        
+        .game-title {
+            font-size: 60px;
+            color: #ff69b4;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 0 #ffb6c1;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            color: #9370db;
+            margin-bottom: 40px;
+        }
+        
+        .cafe-emoji {
+            font-size: 50px;
+            margin: 20px 0;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .header-image {
+            width: 300px;
+            height: 200px;
+            border: 3px dashed #ff69b4;
+            border-radius: 15px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+        
+        .header-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        
+        .game-area {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .order-panel {
+            flex: 1;
+            min-width: 300px;
+            background: linear-gradient(to bottom, #ffe6f2, #f0e6ff);
+            padding: 25px;
+            border-radius: 25px;
+            border: 3px solid #9370db;
+            text-align: left;
+        }
+        
+        .preview-panel {
+            flex: 1;
+            min-width: 300px;
+            background: linear-gradient(to bottom, #f0e6ff, #ffe6f2);
+            padding: 25px;
+            border-radius: 25px;
+            border: 3px solid #ff69b4;
+            text-align: center;
+        }
+        
+        .panel-title {
+            color: #9370db;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .section-title {
+            color: #ff69b4;
+            font-size: 22px;
+            margin: 25px 0 15px;
+            border-bottom: 2px dotted #ffb6c1;
+            padding-bottom: 5px;
+        }
+        
+        .option-group {
+            margin-bottom: 15px;
+        }
+        
+        .option-label {
+            display: block;
+            font-size: 18px;
+            color: #9370db;
+            margin-bottom: 8px;
+        }
+        
+        .option-select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 15px;
+            border: 2px solid #ffb6c1;
+            background: white;
+            font-family: 'Comic Sans MS', cursive;
+            color: #9370db;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .option-select:focus {
+            outline: none;
+            border-color: #ff69b4;
+            box-shadow: 0 0 10px #ffb6c1;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 2px solid #ffb6c1;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .checkbox-option:hover {
+            border-color: #ff69b4;
+            background: #fff0f5;
+        }
+        
+        .checkbox-option input {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        
+        .order-preview {
+            min-height: 250px;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            border: 3px solid #ffb6c1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .cake-preview {
+            width: 150px;
+            height: 80px;
+            border-radius: 50% 50% 10px 10px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .cake-layer {
+            position: absolute;
+            width: 100%;
+            border-radius: 50% 50% 0 0;
+        }
+        
+        .toppings-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .topping {
+            position: absolute;
+            font-size: 20px;
+        }
+        
+        .tea-preview {
+            width: 100px;
+            height: 120px;
+            background: #ffebcd;
+            border-radius: 0 0 20px 20px;
+            margin-top: 20px;
+            position: relative;
+            border: 3px solid #d2b48c;
+        }
+        
+        .tea-liquid {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        .order-summary {
+            background: #fff0f5;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px dashed #ff69b4;
+            text-align: left;
+            font-size: 18px;
+        }
+        
+        .order-item {
+            margin: 10px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px dotted #ffb6c1;
+        }
+        
+        .game-button {
+            background: linear-gradient(to right, #ff8fab, #90c8ff);
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            border-radius: 50px;
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 22px;
+            margin: 20px 10px;
+            cursor: pointer;
+            border: 3px solid #ff69b4;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+        }
+        
+        .game-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5);
+        }
+        
+        .game-button:active {
+            transform: translateY(1px);
+        }
+        
+        .special-button {
+            background: linear-gradient(to right, #ffb6c1, #d8bfd8);
+            color: #9370db;
+            font-weight: bold;
+        }
+        
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            border: 5px solid #ff69b4;
+            box-shadow: 0 0 50px rgba(255, 105, 180, 0.5);
+            z-index: 100;
+            display: none;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .message-box h2 {
+            color: #ff69b4;
+            margin-top: 0;
+        }
+        
+        .message-box p {
+            font-size: 20px;
+            color: #9370db;
+            margin: 20px 0;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 182, 193, 0.8);
+            z-index: 99;
+            display: none;
+        }
+        
+        .price-tag {
+            font-size: 24px;
+            color: #ff69b4;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .femboy-character {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #90c8ff, #ff8fab);
+            border-radius: 50%;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            border: 3px solid #ff69b4;
+        }
+        
+        .character-dialogue {
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            border: 2px solid #90c8ff;
+            margin-top: 15px;
+            font-size: 18px;
+            position: relative;
+        }
+        
+        .character-dialogue:before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid #90c8ff;
+        }
+        
+        .back-button {
+            display: inline-block;
+            background: linear-gradient(to right, #90c8ff, #ff8fab);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 18px;
+            margin-top: 20px;
+            border: 3px solid #ff69b4;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5);
+        }
+        
+        .back-button:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="game-title">🎀 Femboy Cafe Ordering Game 🎀</h1>
+        <div class="subtitle">✨ Customize your cake and tea in this adorable cafe! ✨</div>
+        
+        <div class="header-image">
+            <img src="https://i.pinimg.com/1200x/43/dd/89/43dd89365bb194d7be14791ab8115e46.jpg" alt="Femboy Cafe">
+        </div>
+        
+        <div class="cafe-emoji">☕ 🍰 🎀 🎮</div>
+        
+        <div style="font-size: 22px; color: #9370db; margin: 15px 0;">
+            Welcome to the Femboy Cafe! Zidaine will be serving you today 💖
+        </div>
+        
+        <div class="game-area">
+            <!-- Order Customization Panel -->
+            <div class="order-panel">
+                <div class="panel-title">🌸 Customize Your Order 🌸</div>
+                
+                <!-- Cake Options -->
+                <div class="section-title">🍰 Cake Selection</div>
+                
+                <div class="option-group">
+                    <label class="option-label">Cake Type:</label>
+                    <select id="cakeType" class="option-select">
+                        <option value="vanilla">Vanilla Dream Cake</option>
+                        <option value="chocolate">Chocolate Femboy Delight</option>
+                        <option value="strawberry">Strawberry Blush Cake</option>
+                        <option value="rainbow">Rainbow Pride Cake</option>
+                        <option value="matcha">Matcha Green Tea Cake</option>
+                    </select>
+                </div>
+                
+                <div class="option-group">
+                    <label class="option-label">Cake Size:</label>
+                    <select id="cakeSize" class="option-select">
+                        <option value="small">Small (1 slice) - $4.99</option>
+                        <option value="medium">Medium (4 slices) - $12.99</option>
+                        <option value="large">Large (8 slices) - $22.99</option>
+                        <option value="extra-large">Extra Large (16 slices) - $39.99</option>
+                    </select>
+                </div>
+                
+                <div class="option-group">
+                    <label class="option-label">Toppings (Select as many as you want!):</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="topping" value="sprinkles"> Rainbow Sprinkles (+$0.99)
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="topping" value="whipped"> Whipped Cream (+$1.49)
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="topping" value="cherry"> Cherry on Top (+$0.50)
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="topping" value="hearts"> Edible Hearts (+$1.99)
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="topping" value="glitter"> Edible Glitter (+$2.49)
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="topping" value="flowers"> Sugar Flowers (+$2.99)
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Tea Options -->
+                <div class="section-title">☕ Tea Selection</div>
+                
+                <div class="option-group">
+                    <label class="option-label">Tea Type:</label>
+                    <select id="teaType" class="option-select">
+                        <option value="rose">Rosehip Blush Tea</option>
+                        <option value="lavender">Lavender Dream Tea</option>
+                        <option value="matcha">Matcha Green Tea</option>
+                        <option value="berry">Mixed Berry Tea</option>
+                        <option value="peach">Peach Femboy Tea</option>
+                    </select>
+                </div>
+                
+                <div class="option-group">
+                    <label class="option-label">Tea Size:</label>
+                    <select id="teaSize" class="option-select">
+                        <option value="small">Small Cup - $3.49</option>
+                        <option value="medium">Medium Pot - $5.99</option>
+                        <option value="large">Large Pot - $8.99</option>
+                    </select>
+                </div>
+                
+                <div class="option-group">
+                    <label class="option-label">Sweetness Level:</label>
+                    <select id="sweetness" class="option-select">
+                        <option value="none">No Sugar (Bitter but healthy!)</option>
+                        <option value="light">Lightly Sweet (Just a hint)</option>
+                        <option value="medium">Medium Sweet (Perfect balance)</option>
+                        <option value="sweet">Very Sweet (Sugar rush!)</option>
+                        <option value="extra">Extra Sweet (For the sweetest femboys)</option>
+                    </select>
+                </div>
+                
+                <div class="option-group">
+                    <label class="option-label">Extras:</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="extra" value="honey"> Honey Drizzle (+$0.99)
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="extra" value="milk"> Frothed Milk (+$1.49)
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="extra" value="boba"> Rainbow Boba (+$2.99)
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Special Requests -->
+                <div class="section-title">💝 Special Requests</div>
+                <div class="option-group">
+                    <label class="option-label">Any special message or request?</label>
+                    <textarea id="specialRequest" class="option-select" rows="3" placeholder="Write your cute message here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Order Preview Panel -->
+            <div class="preview-panel">
+                <div class="panel-title">✨ Order Preview ✨</div>
+                
+                <!-- Femboy Character -->
+                <div class="femboy-character">🌸</div>
+                <div class="character-dialogue" id="dialogue">
+                    Hi! I'm Zidaine! Ready to take your order?
+                </div>
+                
+                <!-- Cake Preview -->
+                <div class="order-preview">
+                    <div id="cakePreview" class="cake-preview"></div>
+                    <div id="teaPreview" class="tea-preview"></div>
+                </div>
+                
+                <!-- Order Summary -->
+                <div class="order-summary">
+                    <div class="order-item"><strong>Your Cake:</strong> <span id="summaryCake">Vanilla Dream Cake (Medium)</span></div>
+                    <div class="order-item"><strong>Your Tea:</strong> <span id="summaryTea">Rosehip Blush Tea (Medium Pot)</span></div>
+                    <div class="order-item"><strong>Toppings:</strong> <span id="summaryToppings">None selected</span></div>
+                    <div class="order-item"><strong>Special Request:</strong> <span id="summaryRequest">None</span></div>
+                </div>
+                
+                <!-- Price Display -->
+                <div class="price-tag">Total: $<span id="totalPrice">18.98</span></div>
+                
+                <!-- Action Buttons -->
+                <button class="game-button" id="updateButton">🔄 Update Order Preview</button>
+                <button class="game-button special-button" id="orderButton">🎀 Place Order! 🎀</button>
+                <button class="game-button" id="randomButton">✨ Random Cute Order ✨</button>
+            </div>
+        </div>
+        
+        <!-- Back Button -->
+        <div style="margin-top: 40px;">
+            <a href="index.html" class="back-button">
+                <span>🏠</span> Back to Main Menu
+            </a>
+        </div>
+        
+        <div style="margin-top: 40px; color: #9370db;">
+            💖 Made by Elisha! 💖 (Requested by Zidaine and Amir)
+        </div>
+    </div>
+    
+    <!-- Order Confirmation Message Box -->
+    <div class="overlay" id="overlay"></div>
+    <div class="message-box" id="messageBox">
+        <h2>🎉 Order Confirmed! 🎉</h2>
+        <div class="femboy-character" style="margin: 0 auto 20px;">💖</div>
+        <p id="confirmationMessage">Your order has been placed with Zidaine!</p>
+        <p>Thank you for visiting the Femboy Cafe!</p>
+        <button class="game-button" id="closeMessage">Continue Shopping</button>
+    </div>
+
+    <script>
+        // DOM Elements
+        const cakeTypeSelect = document.getElementById('cakeType');
+        const cakeSizeSelect = document.getElementById('cakeSize');
+        const teaTypeSelect = document.getElementById('teaType');
+        const teaSizeSelect = document.getElementById('teaSize');
+        const sweetnessSelect = document.getElementById('sweetness');
+        const specialRequestText = document.getElementById('specialRequest');
+        
+        const cakePreview = document.getElementById('cakePreview');
+        const teaPreview = document.getElementById('teaPreview');
+        
+        const summaryCake = document.getElementById('summaryCake');
+        const summaryTea = document.getElementById('summaryTea');
+        const summaryToppings = document.getElementById('summaryToppings');
+        const summaryRequest = document.getElementById('summaryRequest');
+        const totalPriceElement = document.getElementById('totalPrice');
+        
+        const updateButton = document.getElementById('updateButton');
+        const orderButton = document.getElementById('orderButton');
+        const randomButton = document.getElementById('randomButton');
+        const dialogue = document.getElementById('dialogue');
+        
+        const overlay = document.getElementById('overlay');
+        const messageBox = document.getElementById('messageBox');
+        const closeMessage = document.getElementById('closeMessage');
+        const confirmationMessage = document.getElementById('confirmationMessage');
+        
+        // Price mapping
+        const cakePrices = {
+            small: 4.99,
+            medium: 12.99,
+            large: 22.99,
+            "extra-large": 39.99
+        };
+        
+        const teaPrices = {
+            small: 3.49,
+            medium: 5.99,
+            large: 8.99
+        };
+        
+        const toppingPrices = {
+            sprinkles: 0.99,
+            whipped: 1.49,
+            cherry: 0.50,
+            hearts: 1.99,
+            glitter: 2.49,
+            flowers: 2.99
+        };
+        
+        const extraPrices = {
+            honey: 0.99,
+            milk: 1.49,
+            boba: 2.99
+        };
+        
+        // Cake color mapping
+        const cakeColors = {
+            vanilla: "#FFF8DC",
+            chocolate: "#8B4513",
+            strawberry: "#FFB6C1",
+            rainbow: "linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)",
+            matcha: "#C1E1C1"
+        };
+        
+        // Tea color mapping
+        const teaColors = {
+            rose: "#FFB6C1",
+            lavender: "#E6E6FA",
+            matcha: "#C1E1C1",
+            berry: "#DDA0DD",
+            peach: "#FFDAB9"
+        };
+        
+        // Initialize the preview
+        updatePreview();
+        
+        // Event Listeners
+        updateButton.addEventListener('click', updatePreview);
+        
+        orderButton.addEventListener('click', function() {
+            const cakeType = cakeTypeSelect.options[cakeTypeSelect.selectedIndex].text;
+            const teaType = teaTypeSelect.options[teaTypeSelect.selectedIndex].text;
+            const specialRequest = specialRequestText.value || "No special request";
+            
+            // Update dialogue
+            const responses = [
+                "Yay! I'll prepare your order right away!",
+                "Perfect choice! Your order is so cute!",
+                "Coming right up! I love this combination!",
+                "Great taste! This order is absolutely adorable!",
+                "I'm so excited to make this for you! It's going to be perfect!"
+            ];
+            dialogue.textContent = responses[Math.floor(Math.random() * responses.length)];
+            
+            // Show confirmation message
+            confirmationMessage.innerHTML = `Your <strong>${cakeType}</strong> and <strong>${teaType}</strong> are being prepared by Zidaine!<br><br>Special request: "${specialRequest}"`;
+            
+            overlay.style.display = 'block';
+            messageBox.style.display = 'block';
+        });
+        
+        closeMessage.addEventListener('click', function() {
+            overlay.style.display = 'none';
+            messageBox.style.display = 'none';
+        });
+        
+        randomButton.addEventListener('click', function() {
+            // Randomize cake type
+            const cakeTypes = ["vanilla", "chocolate", "strawberry", "rainbow", "matcha"];
+            cakeTypeSelect.selectedIndex = Math.floor(Math.random() * cakeTypes.length);
+            
+            // Randomize cake size
+            const cakeSizes = ["small", "medium", "large", "extra-large"];
+            cakeSizeSelect.selectedIndex = Math.floor(Math.random() * cakeSizes.length);
+            
+            // Randomize toppings (1-3 random toppings)
+            const toppingCheckboxes = document.querySelectorAll('input[name="topping"]');
+            toppingCheckboxes.forEach(cb => cb.checked = false);
+            
+            const numToppings = Math.floor(Math.random() * 3) + 1;
+            for (let i = 0; i < numToppings; i++) {
+                const randomIndex = Math.floor(Math.random() * toppingCheckboxes.length);
+                toppingCheckboxes[randomIndex].checked = true;
+            }
+            
+            // Randomize tea type
+            const teaTypes = ["rose", "lavender", "matcha", "berry", "peach"];
+            teaTypeSelect.selectedIndex = Math.floor(Math.random() * teaTypes.length);
+            
+            // Randomize tea size
+            const teaSizes = ["small", "medium", "large"];
+            teaSizeSelect.selectedIndex = Math.floor(Math.random() * teaSizes.length);
+            
+            // Randomize sweetness
+            const sweetnessLevels = ["none", "light", "medium", "sweet", "extra"];
+            sweetnessSelect.selectedIndex = Math.floor(Math.random() * sweetnessLevels.length);
+            
+            // Randomize extras (0-2 random extras)
+            const extraCheckboxes = document.querySelectorAll('input[name="extra"]');
+            extraCheckboxes.forEach(cb => cb.checked = false);
+            
+            const numExtras = Math.floor(Math.random() * 3);
+            for (let i = 0; i < numExtras; i++) {
+                const randomIndex = Math.floor(Math.random() * extraCheckboxes.length);
+                extraCheckboxes[randomIndex].checked = true;
+            }
+            
+            // Random cute message 20% of the time
+            if (Math.random() < 0.2) {
+                const cuteMessages = [
+                    "Can you draw a heart on my cake please? 💖",
+                    "Make it extra cute for me! 🌸",
+                    "Add lots of sprinkles! It's my birthday! 🎂",
+                    "Can you make it pastel colored? 🎨",
+                    "Surprise me with something adorable! 🎀"
+                ];
+                specialRequestText.value = cuteMessages[Math.floor(Math.random() * cuteMessages.length)];
+            } else {
+                specialRequestText.value = "";
+            }
+            
+            // Update the preview
+            updatePreview();
+            
+            // Update dialogue
+            const responses = [
+                "I randomized your order! Isn't it cute?",
+                "Ooh, this random combination looks adorable!",
+                "Surprise! Here's a random cute order for you!",
+                "This random order is so perfect for you!"
+            ];
+            dialogue.textContent = responses[Math.floor(Math.random() * responses.length)];
+        });
+        
+        // Function to update the preview
+        function updatePreview() {
+            // Get selected values
+            const cakeType = cakeTypeSelect.value;
+            const cakeSize = cakeSizeSelect.value;
+            const teaType = teaTypeSelect.value;
+            const teaSize = teaSizeSelect.value;
+            const sweetness = sweetnessSelect.value;
+            const specialRequest = specialRequestText.value;
+            
+            // Get selected toppings
+            const selectedToppings = [];
+            const toppingCheckboxes = document.querySelectorAll('input[name="topping"]:checked');
+            toppingCheckboxes.forEach(cb => selectedToppings.push(cb.value));
+            
+            // Get selected extras
+            const selectedExtras = [];
+            const extraCheckboxes = document.querySelectorAll('input[name="extra"]:checked');
+            extraCheckboxes.forEach(cb => selectedExtras.push(cb.value));
+            
+            // Update cake preview
+            cakePreview.innerHTML = '';
+            const cakeLayer = document.createElement('div');
+            cakeLayer.className = 'cake-layer';
+            
+            if (cakeType === 'rainbow') {
+                cakeLayer.style.background = cakeColors.rainbow;
+                cakeLayer.style.height = '100%';
+            } else {
+                cakeLayer.style.backgroundColor = cakeColors[cakeType];
+                cakeLayer.style.height = '100%';
+            }
+            
+            cakePreview.appendChild(cakeLayer);
+            
+            // Add toppings
+            if (selectedToppings.length > 0) {
+                const toppingsContainer = document.createElement('div');
+                toppingsContainer.className = 'toppings-container';
+                
+                selectedToppings.forEach((topping, index) => {
+                    const toppingElement = document.createElement('div');
+                    toppingElement.className = 'topping';
+                    
+                    // Position toppings randomly
+                    const angle = (index / selectedToppings.length) * 2 * Math.PI;
+                    const radius = 40;
+                    const x = radius * Math.cos(angle);
+                    const y = radius * Math.sin(angle);
+                    
+                    toppingElement.style.left = `calc(50% + ${x}px)`;
+                    toppingElement.style.top = `calc(50% + ${y}px)`;
+                    
+                    // Set topping emoji
+                    if (topping === 'sprinkles') toppingElement.textContent = '🌈';
+                    else if (topping === 'whipped') toppingElement.textContent = '☁️';
+                    else if (topping === 'cherry') toppingElement.textContent = '🍒';
+                    else if (topping === 'hearts') toppingElement.textContent = '💖';
+                    else if (topping === 'glitter') toppingElement.textContent = '✨';
+                    else if (topping === 'flowers') toppingElement.textContent = '🌸';
+                    
+                    toppingsContainer.appendChild(toppingElement);
+                });
+                
+                cakePreview.appendChild(toppingsContainer);
+            }
+            
+            // Update tea preview
+            teaPreview.innerHTML = '';
+            const teaLiquid = document.createElement('div');
+            teaLiquid.className = 'tea-liquid';
+            teaLiquid.style.backgroundColor = teaColors[teaType];
+            
+            // Set tea height based on size
+            if (teaSize === 'small') teaLiquid.style.height = '70%';
+            else if (teaSize === 'medium') teaLiquid.style.height = '80%';
+            else if (teaSize === 'large') teaLiquid.style.height = '90%';
+            
+            teaPreview.appendChild(teaLiquid);
+            
+            // Add boba if selected
+            if (selectedExtras.includes('boba')) {
+                const bobaElement = document.createElement('div');
+                bobaElement.style.position = 'absolute';
+                bobaElement.style.bottom = '10px';
+                bobaElement.style.left = '50%';
+                bobaElement.style.transform = 'translateX(-50%)';
+                bobaElement.textContent = '⚫⚫⚫';
+                teaPreview.appendChild(bobaElement);
+            }
+            
+            // Update order summary
+            summaryCake.textContent = `${cakeTypeSelect.options[cakeTypeSelect.selectedIndex].text} (${cakeSize})`;
+            summaryTea.textContent = `${teaTypeSelect.options[teaTypeSelect.selectedIndex].text} (${teaSize} pot) - ${sweetness} sweetness`;
+            
+            // Update toppings summary
+            if (selectedToppings.length > 0) {
+                const toppingNames = selectedToppings.map(t => {
+                    if (t === 'sprinkles') return 'Rainbow Sprinkles';
+                    if (t === 'whipped') return 'Whipped Cream';
+                    if (t === 'cherry') return 'Cherry on Top';
+                    if (t === 'hearts') return 'Edible Hearts';
+                    if (t === 'glitter') return 'Edible Glitter';
+                    if (t === 'flowers') return 'Sugar Flowers';
+                    return t;
+                });
+                summaryToppings.textContent = toppingNames.join(', ');
+            } else {
+                summaryToppings.textContent = 'None selected';
+            }
+            
+            // Update special request summary
+            summaryRequest.textContent = specialRequest || 'None';
+            
+            // Calculate total price
+            let totalPrice = cakePrices[cakeSize] + teaPrices[teaSize];
+            
+            selectedToppings.forEach(topping => {
+                totalPrice += toppingPrices[topping];
+            });
+            
+            selectedExtras.forEach(extra => {
+                totalPrice += extraPrices[extra];
+            });
+            
+            totalPriceElement.textContent = totalPrice.toFixed(2);
+            
+            // Update dialogue
+            updateDialogue();
+        }
+        
+        // Function to update the femboy's dialogue
+        function updateDialogue() {
+            const cakeType = cakeTypeSelect.value;
+            const teaType = teaTypeSelect.value;
+            const sweetness = sweetnessSelect.value;
+            
+            const cakeComments = {
+                vanilla: "Vanilla is such a classic choice! So elegant!",
+                chocolate: "Chocolate cake is always a mood booster!",
+                strawberry: "Strawberry cake is so pink and cute!",
+                rainbow: "Rainbow cake is perfect for spreading joy!",
+                matcha: "Matcha cake is so trendy and delicious!"
+            };
+            
+            const teaComments = {
+                rose: "Rose tea is so romantic and fragrant!",
+                lavender: "Lavender tea is so calming and lovely!",
+                matcha: "Matcha tea is full of antioxidants!",
+                berry: "Berry tea is so fruity and refreshing!",
+                peach: "Peach tea is sweet and delightful!"
+            };
+            
+            const sweetnessComments = {
+                none: "No sugar? You're so health-conscious!",
+                light: "Just a little sweetness, perfect!",
+                medium: "The perfect balance of sweetness!",
+                sweet: "Sweet just like you!",
+                extra: "Extra sweet for an extra sweet femboy!"
+            };
+            
+            const randomIndex = Math.floor(Math.random() * 3);
+            if (randomIndex === 0) {
+                dialogue.textContent = cakeComments[cakeType];
+            } else if (randomIndex === 1) {
+                dialogue.textContent = teaComments[teaType];
+            } else {
+                dialogue.textContent = sweetnessComments[sweetness];
+            }
+        }
+        
+        // Add event listeners to all select elements for auto-update
+        const allSelects = document.querySelectorAll('.option-select');
+        allSelects.forEach(select => {
+            select.addEventListener('change', updatePreview);
+        });
+        
+        // Add event listeners to all checkboxes for auto-update
+        const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+        allCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updatePreview);
+        });
+        
+        // Add event listener to textarea for auto-update
+        specialRequestText.addEventListener('input', updatePreview);
+    </script>
+</body>
+</html>
