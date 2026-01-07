@@ -368,6 +368,62 @@
         .back-button:active {
             transform: translateY(1px);
         }
+        
+        /* NEW: Redirect message box */
+        .redirect-message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            border: 5px solid #ff69b4;
+            box-shadow: 0 0 50px rgba(255, 105, 180, 0.5);
+            z-index: 100;
+            display: none;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .redirect-message-box h2 {
+            color: #ff69b4;
+            margin-top: 0;
+            font-size: 36px;
+        }
+        
+        .redirect-message-box p {
+            font-size: 20px;
+            color: #9370db;
+            margin: 20px 0;
+        }
+        
+        .redirect-timer {
+            font-size: 24px;
+            color: #ff69b4;
+            font-weight: bold;
+            margin: 15px 0;
+            font-family: monospace;
+        }
+        
+        .redirect-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 182, 193, 0.9), rgba(230, 230, 250, 0.9));
+            z-index: 99;
+            display: none;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            z-index: 98;
+        }
     </style>
 </head>
 <body>
@@ -541,14 +597,22 @@
         </div>
     </div>
     
-    <!-- Order Confirmation Message Box -->
-    <div class="overlay" id="overlay"></div>
-    <div class="message-box" id="messageBox">
+    <!-- Order Confirmation & Redirect Message Box -->
+    <div class="redirect-overlay" id="redirectOverlay"></div>
+    <div class="redirect-message-box" id="redirectMessageBox">
         <h2>🎉 Order Confirmed! 🎉</h2>
-        <div class="femboy-character" style="margin: 0 auto 20px;">💖</div>
+        <div class="femboy-character" style="margin: 0 auto 20px; animation: spin 1s linear infinite;">💖</div>
         <p id="confirmationMessage">Your order has been placed with Zidaine!</p>
-        <p>Thank you for visiting the Femboy Cafe!</p>
-        <button class="game-button" id="closeMessage">Continue Shopping</button>
+        <p style="font-size: 22px; color: #ff69b4; font-weight: bold;">
+            Redirecting you to the chat room to share your order! 💬
+        </p>
+        <div class="redirect-timer" id="redirectTimer">3</div>
+        <p style="font-size: 16px; color: #9370db; margin-top: 20px;">
+            Chat with other cafe visitors about your order!
+        </p>
+        <button class="game-button" id="redirectNowButton" style="margin-top: 20px;">
+            Go to Chat Now! 💬
+        </button>
     </div>
 
     <script>
@@ -574,9 +638,10 @@
         const randomButton = document.getElementById('randomButton');
         const dialogue = document.getElementById('dialogue');
         
-        const overlay = document.getElementById('overlay');
-        const messageBox = document.getElementById('messageBox');
-        const closeMessage = document.getElementById('closeMessage');
+        const redirectOverlay = document.getElementById('redirectOverlay');
+        const redirectMessageBox = document.getElementById('redirectMessageBox');
+        const redirectTimer = document.getElementById('redirectTimer');
+        const redirectNowButton = document.getElementById('redirectNowButton');
         const confirmationMessage = document.getElementById('confirmationMessage');
         
         // Price mapping
@@ -647,16 +712,48 @@
             ];
             dialogue.textContent = responses[Math.floor(Math.random() * responses.length)];
             
-            // Show confirmation message
-            confirmationMessage.innerHTML = `Your <strong>${cakeType}</strong> and <strong>${teaType}</strong> are being prepared by Zidaine!<br><br>Special request: "${specialRequest}"`;
+            // Save order to localStorage so chat can access it
+            const orderData = {
+                cake: cakeType,
+                tea: teaType,
+                cakeSize: cakeSizeSelect.options[cakeSizeSelect.selectedIndex].text,
+                teaSize: teaSizeSelect.options[teaSizeSelect.selectedIndex].text,
+                toppings: getSelectedToppingsText(),
+                extras: getSelectedExtrasText(),
+                sweetness: sweetnessSelect.options[sweetnessSelect.selectedIndex].text,
+                specialRequest: specialRequest,
+                totalPrice: totalPriceElement.textContent,
+                timestamp: new Date().toLocaleString()
+            };
             
-            overlay.style.display = 'block';
-            messageBox.style.display = 'block';
+            localStorage.setItem('femboyCafeOrder', JSON.stringify(orderData));
+            
+            // Show redirect message
+            confirmationMessage.innerHTML = `Your <strong>${cakeType}</strong> and <strong>${teaType}</strong> are being prepared!`;
+            
+            redirectOverlay.style.display = 'block';
+            redirectMessageBox.style.display = 'block';
+            
+            // Create confetti effect
+            createConfetti();
+            
+            // Start countdown for redirect
+            let countdown = 3;
+            redirectTimer.textContent = countdown;
+            
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                redirectTimer.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    redirectToChat();
+                }
+            }, 1000);
         });
         
-        closeMessage.addEventListener('click', function() {
-            overlay.style.display = 'none';
-            messageBox.style.display = 'none';
+        redirectNowButton.addEventListener('click', function() {
+            redirectToChat();
         });
         
         randomButton.addEventListener('click', function() {
@@ -895,6 +992,96 @@
                 dialogue.textContent = teaComments[teaType];
             } else {
                 dialogue.textContent = sweetnessComments[sweetness];
+            }
+        }
+        
+        // Helper function to get toppings as text
+        function getSelectedToppingsText() {
+            const selectedToppings = [];
+            const toppingCheckboxes = document.querySelectorAll('input[name="topping"]:checked');
+            toppingCheckboxes.forEach(cb => {
+                if (cb.value === 'sprinkles') selectedToppings.push('Rainbow Sprinkles');
+                else if (cb.value === 'whipped') selectedToppings.push('Whipped Cream');
+                else if (cb.value === 'cherry') selectedToppings.push('Cherry on Top');
+                else if (cb.value === 'hearts') selectedToppings.push('Edible Hearts');
+                else if (cb.value === 'glitter') selectedToppings.push('Edible Glitter');
+                else if (cb.value === 'flowers') selectedToppings.push('Sugar Flowers');
+            });
+            return selectedToppings.length > 0 ? selectedToppings.join(', ') : 'None';
+        }
+        
+        // Helper function to get extras as text
+        function getSelectedExtrasText() {
+            const selectedExtras = [];
+            const extraCheckboxes = document.querySelectorAll('input[name="extra"]:checked');
+            extraCheckboxes.forEach(cb => {
+                if (cb.value === 'honey') selectedExtras.push('Honey Drizzle');
+                else if (cb.value === 'milk') selectedExtras.push('Frothed Milk');
+                else if (cb.value === 'boba') selectedExtras.push('Rainbow Boba');
+            });
+            return selectedExtras.length > 0 ? selectedExtras.join(', ') : 'None';
+        }
+        
+        // Function to redirect to chat room
+        function redirectToChat() {
+            // First save the current order to localStorage
+            const orderData = {
+                cake: cakeTypeSelect.options[cakeTypeSelect.selectedIndex].text,
+                tea: teaTypeSelect.options[teaTypeSelect.selectedIndex].text,
+                cakeSize: cakeSizeSelect.options[cakeSizeSelect.selectedIndex].text,
+                teaSize: teaSizeSelect.options[teaSizeSelect.selectedIndex].text,
+                toppings: getSelectedToppingsText(),
+                extras: getSelectedExtrasText(),
+                sweetness: sweetnessSelect.options[sweetnessSelect.selectedIndex].text,
+                specialRequest: specialRequestText.value || "No special request",
+                totalPrice: totalPriceElement.textContent,
+                timestamp: new Date().toLocaleString()
+            };
+            
+            localStorage.setItem('femboyCafeOrder', JSON.stringify(orderData));
+            
+            // Redirect to chat room
+            window.location.href = 'chat-room.html';
+        }
+        
+        // Function to create confetti effect
+        function createConfetti() {
+            const colors = ['#ff69b4', '#9370db', '#90c8ff', '#ffb6c1', '#e6e6fa'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Random position
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                
+                // Random color
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Random size
+                const size = Math.random() * 10 + 5;
+                confetti.style.width = size + 'px';
+                confetti.style.height = size + 'px';
+                
+                // Random shape
+                if (Math.random() > 0.5) {
+                    confetti.style.borderRadius = '50%';
+                }
+                
+                document.body.appendChild(confetti);
+                
+                // Animate
+                const animation = confetti.animate([
+                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(${Math.random() * 100 + 100}vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: Math.random() * 2000 + 2000,
+                    easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
+                });
+                
+                // Remove after animation
+                animation.onfinish = () => confetti.remove();
             }
         }
         
